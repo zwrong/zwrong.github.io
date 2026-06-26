@@ -788,6 +788,11 @@ article th {
   margin-bottom: 0;
 }
 
+.recommendation-note {
+  font-style: normal;
+  font-size: 0.875rem;
+}
+
 @media (max-width: 560px) {
   .recommendation-thumb {
     float: none;
