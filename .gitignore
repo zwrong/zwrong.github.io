@@ -1,6 +1,5 @@
 node_modules
 dist
 .playwright-cli
-iShot_*.png
 .DS_Store
 sourceOfBlog

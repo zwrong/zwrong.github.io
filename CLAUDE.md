@@ -2,7 +2,8 @@
 
 After every code change:
 1. Run `npm run build` to rebuild the static site
-2. Stage changed files and commit with a descriptive message
+2. Run `npm test` to verify all referenced images exist in source and dist
+3. Stage changed files and commit with a descriptive message
 
 # Recommended Reading / Viewing
 

@@ -242,10 +242,8 @@ function copyAssets(srcDir, destDir) {
     if (entry.isDirectory() && (entry.name.endsWith('.assets') || entry.name === 'media' || entry.name === 'assets')) {
       const src = path.join(srcDir, entry.name);
       const dest = path.join(destDir, entry.name);
-      if (!fs.existsSync(dest)) {
-        fs.cpSync(src, dest, { recursive: true });
-        console.log(`  copied: dist/${path.basename(destDir)}/${entry.name}/`);
-      }
+      fs.cpSync(src, dest, { recursive: true });
+      console.log(`  copied: dist/${path.basename(destDir)}/${entry.name}/`);
     }
   }
 }
