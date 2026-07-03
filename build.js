@@ -248,9 +248,25 @@ function copyAssets(srcDir, destDir) {
   }
 }
 
+function normalizeDate(dateStr) {
+  const chineseMatch = String(dateStr).match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/);
+  if (chineseMatch) {
+    return `${chineseMatch[1]}-${chineseMatch[2].padStart(2, '0')}-${chineseMatch[3].padStart(2, '0')}`;
+  }
+
+  const isoMatch = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (isoMatch) {
+    return `${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}-${isoMatch[3].padStart(2, '0')}`;
+  }
+
+  return String(dateStr);
+}
+
 function formatDateShort(dateStr) {
-  const m = dateStr.match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/);
-  return m ? `${m[1]}-${parseInt(m[2])}-${parseInt(m[3])}` : dateStr;
+  const normalized = normalizeDate(dateStr);
+  const isoMatch = normalized.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!isoMatch) return normalized;
+  return `${isoMatch[1]}-${parseInt(isoMatch[2], 10)}-${parseInt(isoMatch[3], 10)}`;
 }
 
 function renderRecommendedCard(item) {
@@ -287,13 +303,9 @@ function renderRecommendedCard(item) {
 
 function buildIndex(posts, recommended) {
   // Sort by date descending
-  function parseDate(dateStr) {
-    const m = dateStr.match(/(\d+)\s*年\s*(\d+)\s*月\s*(\d+)\s*日/);
-    return m ? `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}` : dateStr;
-  }
   posts.sort((a, b) => {
-    if (parseDate(a.date) < parseDate(b.date)) return 1;
-    if (parseDate(a.date) > parseDate(b.date)) return -1;
+    if (normalizeDate(a.date) < normalizeDate(b.date)) return 1;
+    if (normalizeDate(a.date) > normalizeDate(b.date)) return -1;
     return 0;
   });
 
@@ -384,7 +396,30 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2023-7-27",
+    recommendedAt: "2026-07-03T12:13:30+08:00",
+    title: "Will Depue: 20 Year Old OpenAI Researcher Shares The Secret To Building Anything | EP26",
+    url: "https://www.youtube.com/watch?v=q0cjcw3af_k&t=71s",
+    kind: "Video",
+    site: "YouTube",
+    description: "",
+    thumbnail: "https://i.ytimg.com/vi/q0cjcw3af_k/hqdefault.jpg",
+    notes: "这个播客给我一些信心：personal brand compounds，在早期会比较慢，突破了一个点后就会持续带来收益。“And I know I'm capable of sxxx.” 能够清晰地、有自信地认识到自己能做成事情。",
+  },
+  {
+    date: "2026-5-11",
+    recommendedAt: "2026-07-03T10:11:00+08:00",
+    title: "Harness不是目的，知识才是护城河 —— 一个AI工程交付团队的知识沉淀实践",
+    url: "https://mp.weixin.qq.com/s/JV4-oPP0jjsBCZ4tW3Gy1g?click_id=5&scene=1",
+    kind: "Reading",
+    site: "mp.weixin.qq.com",
+    description: "",
+    thumbnail: "/recommended-reading/media/tencent-tech-engineer-knowledge-moat.png",
+    notes: "认同文章的核心观点，领域知识是团队的核心资产，再聪明的模型也没办法提前知道团队在什么地方踩了坑。对文章中“上下文效率提升了一个数量级”有存疑，文章没有对上下文效率进行定义。",
+  },
+  {
     date: "2026-6-24",
+    recommendedAt: "2026-07-03T10:10:00+08:00",
     title: "Linus's opinion on coding in the AI Era",
     url: "https://x.com/IntCyberDigest/status/2069512370217488423",
     kind: "Video",
@@ -395,6 +430,7 @@ const recommended = [
   },
   {
     date: "2026-5-18",
+    recommendedAt: "2026-07-03T10:09:00+08:00",
     title: "Harnesses in AI: A Deep Dive — Tejas Kumar, IBM",
     url: "https://www.youtube.com/watch?v=C_GG5g38vLU",
     kind: "Video",
@@ -405,6 +441,7 @@ const recommended = [
   },
   {
     date: "2025-11-30",
+    recommendedAt: "2026-07-03T10:08:00+08:00",
     title: "What I learned building an opinionated and minimal coding agent",
     url: "https://mariozechner.at/posts/2025-11-30-pi-coding-agent/",
     kind: "Reading",
@@ -415,6 +452,7 @@ const recommended = [
   },
   {
     date: "2026-3-29",
+    recommendedAt: "2026-07-03T10:07:00+08:00",
     title: "从 Claude Code 看 Harness Engineer 的设计",
     url: "https://zhuanlan.zhihu.com/p/2021603278606087058",
     kind: "Reading",
@@ -425,6 +463,7 @@ const recommended = [
   },
   {
     date: "2026-1-17",
+    recommendedAt: "2026-07-03T10:06:00+08:00",
     title: "The Shorthand Guide to Everything Claude Code",
     url: "https://x.com/affaan/status/2012378465664745795",
     kind: "Reading",
@@ -435,6 +474,7 @@ const recommended = [
   },
   {
     date: "2026-3-25",
+    recommendedAt: "2026-07-03T10:05:00+08:00",
     title: "Thoughts on Slowing the Fuck Down",
     url: "https://mariozechner.at/posts/2026-03-25-thoughts-on-slowing-the-fuck-down/",
     kind: "Reading",
@@ -444,8 +484,7 @@ const recommended = [
     notes: "我时常困惑AI生成的代码这么快，人一行一行review不过来该怎么办？于是遇到了这篇文章。",
   },
 ];
-// Sort by date descending (newest first)
-recommended.sort((a, b) => b.date.localeCompare(a.date));
+recommended.sort((a, b) => new Date(b.recommendedAt).getTime() - new Date(a.recommendedAt).getTime());
 
 buildIndex(posts, recommended);
 buildRecommendedPage(recommended);
