@@ -19,6 +19,8 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const POSTS_DIR = path.join(__dirname, 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
+const RECOMMENDED_MEDIA_DIR = path.join(__dirname, 'recommended-media');
+const RECOMMENDED_DIST_MEDIA_DIR = path.join(DIST_DIR, 'recommended-reading', 'media');
 const MARIOZECHNER_DIR = '/Users/vinen/Documents/Vscode_Homepage/Blog/mariozechner';
 
 const args = process.argv.slice(2);
@@ -49,6 +51,94 @@ function extractImageRefs(mdContent) {
   return [...new Set(refs)]; // 去重
 }
 
+function extractRecommendedLocalThumbnails(source) {
+  const refs = [];
+  const regex = /thumbnail:\s*["'`]\/recommended-reading\/media\/([^"'`]+)["'`]/g;
+  let match;
+  while ((match = regex.exec(source)) !== null) {
+    refs.push(match[1]);
+  }
+  return [...new Set(refs)];
+}
+
+function extractEvidenceFiles(mdContent) {
+  const refs = [];
+  const regex = /^:::\s*evidence\s+(\S+)/gm;
+  let match;
+  while ((match = regex.exec(mdContent)) !== null) {
+    refs.push(match[1]);
+  }
+  return [...new Set(refs)];
+}
+
+function collectPostImageRefs(postDir, entryFile = 'index.md', visited = new Set()) {
+  const entryPath = path.join(postDir, entryFile);
+  const visitKey = path.resolve(entryPath);
+  if (visited.has(visitKey) || !fs.existsSync(entryPath)) {
+    return [];
+  }
+
+  visited.add(visitKey);
+
+  const mdContent = fs.readFileSync(entryPath, 'utf-8');
+  const refs = new Set(extractImageRefs(mdContent));
+
+  for (const evidenceFile of extractEvidenceFiles(mdContent)) {
+    const nestedRefs = collectPostImageRefs(postDir, evidenceFile, visited);
+    for (const ref of nestedRefs) {
+      refs.add(ref);
+    }
+  }
+
+  return [...refs];
+}
+
+function checkRecommendedThumbnails() {
+  const buildSource = fs.readFileSync(path.join(__dirname, 'build.js'), 'utf-8');
+  const refs = extractRecommendedLocalThumbnails(buildSource);
+  if (refs.length === 0) return;
+
+  console.log('\n🖼️ Recommended thumbnails');
+
+  if (!fs.existsSync(RECOMMENDED_MEDIA_DIR)) {
+    for (const ref of refs) {
+      error(`引用了 /recommended-reading/media/${ref}，但 recommended-media/ 目录不存在`);
+    }
+    return;
+  }
+
+  const sourceFiles = new Set(fs.readdirSync(RECOMMENDED_MEDIA_DIR));
+  for (const ref of refs) {
+    if (sourceFiles.has(ref)) {
+      console.log(`  ✅ ${ref}`);
+    } else {
+      error(`recommended-media/ 缺少 ${ref}（build.js 引用了但目录中没有）`);
+    }
+  }
+
+  for (const file of sourceFiles) {
+    if (!refs.includes(file)) {
+      warn(`📦 recommended-media: 有未引用的文件: ${file}`);
+    }
+  }
+
+  if (!checkDist) return;
+
+  if (!fs.existsSync(RECOMMENDED_DIST_MEDIA_DIR)) {
+    for (const ref of refs) {
+      error(`dist/recommended-reading/media/ 目录不存在，请重新 npm run build`);
+    }
+    return;
+  }
+
+  const distFiles = new Set(fs.readdirSync(RECOMMENDED_DIST_MEDIA_DIR));
+  for (const ref of refs) {
+    if (!distFiles.has(ref)) {
+      error(`dist/recommended-reading/media/ 缺少 ${ref}（重新 npm run build 可解决）`);
+    }
+  }
+}
+
 /** 检查单个文章 */
 function checkPost(postDir, postName) {
   const mdFile = path.join(postDir, 'index.md');
@@ -56,8 +146,7 @@ function checkPost(postDir, postName) {
 
   if (!fs.existsSync(mdFile)) return;
 
-  const mdContent = fs.readFileSync(mdFile, 'utf-8');
-  const refs = extractImageRefs(mdContent);
+  const refs = collectPostImageRefs(postDir);
   if (refs.length === 0) return;
 
   console.log(`\n📄 ${postName}`);
@@ -76,7 +165,7 @@ function checkPost(postDir, postName) {
     if (mediaFiles.has(ref)) {
       console.log(`  ✅ ${ref}`);
     } else {
-      error(`缺少 ${ref}（index.md 引用了但 media/ 目录中没有）`);
+      error(`缺少 ${ref}（文章内容引用了但 media/ 目录中没有）`);
     }
   }
 
@@ -103,18 +192,13 @@ for (const entry of postDirs) {
 }
 
 console.log(`\n📊 共检查 ${checkedCount} 篇文章`);
-
-// 警告汇总
-if (warnings.length > 0) {
-  console.log(`\n⚠️  警告（${warnings.length} 条）:`);
-  for (const w of warnings) {
-    console.log(`  ${w}`);
-  }
-}
+checkRecommendedThumbnails();
 
 // 检查 dist（可选）
 if (checkDist) {
   console.log('\n📦 检查 dist 目录...');
+  const hadErrorBeforeDistCheck = hasError;
+
   for (const entry of postDirs) {
     if (!entry.isDirectory()) continue;
     const postName = entry.name;
@@ -122,8 +206,7 @@ if (checkDist) {
     const mdFile = path.join(POSTS_DIR, postName, 'index.md');
 
     if (!fs.existsSync(mdFile)) continue;
-    const mdContent = fs.readFileSync(mdFile, 'utf-8');
-    const refs = extractImageRefs(mdContent);
+    const refs = collectPostImageRefs(path.join(POSTS_DIR, postName));
     if (refs.length === 0) continue;
 
     if (!fs.existsSync(distMedia)) {
@@ -139,6 +222,18 @@ if (checkDist) {
         error(`dist/${postName}/media/ 缺少 ${ref}（重新 npm run build 可解决）`);
       }
     }
+  }
+
+  if (hasError === hadErrorBeforeDistCheck) {
+    console.log('  ✅ dist 目录检查通过');
+  }
+}
+
+// 警告汇总
+if (warnings.length > 0) {
+  console.log(`\n⚠️  警告（${warnings.length} 条）:`);
+  for (const w of warnings) {
+    console.log(`  ${w}`);
   }
 }
 
@@ -164,4 +259,11 @@ if (showFix && fs.existsSync(MARIOZECHNER_DIR)) {
 }
 
 console.log(''); // 空行
+if (hasError) {
+  console.log('❌ 图片检查失败');
+} else if (warnings.length > 0) {
+  console.log(`✅ 图片检查通过（有 ${warnings.length} 条警告）`);
+} else {
+  console.log('✅ 图片检查通过');
+}
 process.exit(hasError ? 1 : 0);
