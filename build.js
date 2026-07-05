@@ -396,7 +396,7 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
-    date: "2022-6-25",
+    date: "2026-6-25",
     recommendedAt: "2026-07-05T23:13:25+08:00",
     title: "How to Build a Coding Agent | 3-Layer Architecture",
     url: "https://www.youtube.com/watch?v=5duo9qHw660&t=18s",
