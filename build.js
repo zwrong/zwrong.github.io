@@ -396,6 +396,17 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2022-6-25",
+    recommendedAt: "2026-07-05T23:13:25+08:00",
+    title: "How to Build a Coding Agent | 3-Layer Architecture",
+    url: "https://www.youtube.com/watch?v=5duo9qHw660&t=18s",
+    kind: "Video",
+    site: "YouTube",
+    description: "",
+    thumbnail: "https://i.ytimg.com/vi/5duo9qHw660/hqdefault.jpg",
+    notes: "用白板的形式，清晰讲解了coding agent的架构",
+  },
+  {
     date: "2023-7-27",
     recommendedAt: "2026-07-03T12:13:30+08:00",
     title: "Will Depue: 20 Year Old OpenAI Researcher Shares The Secret To Building Anything | EP26",
