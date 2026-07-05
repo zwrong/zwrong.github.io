@@ -3,3 +3,9 @@ dist
 .playwright-cli
 .DS_Store
 sourceOfBlog
+
+# Local Claude files
+.claude/
+*.SKILL.draft.md
+*.evals.draft.json
+friends-homepage.png
