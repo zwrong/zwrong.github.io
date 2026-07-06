@@ -646,6 +646,17 @@ article th {
     color: var(--text-color);
 }
 
+.recommended-row {
+    display: grid;
+    grid-template-columns: 10ch minmax(0, 1fr);
+    column-gap: 0.03rem;
+    align-items: baseline;
+}
+
+.recommended-date {
+    white-space: nowrap;
+}
+
 .recommended-link:hover .recommended-title {
     color: var(--link-color);
 }

@@ -328,8 +328,8 @@ function buildIndex(posts, recommended) {
           ${homepageRecommended.map(r => {
             const href = escapeHtml(r.url);
             return `<a href="${href}" target="_blank" rel="noopener" class="recommended-link">
-              <div class="flex row gap-4 items-baseline">
-                <span class="text-sm text-muted italic whitespace-nowrap">${escapeHtml(r.date)}</span>
+              <div class="recommended-row">
+                <span class="recommended-date text-sm text-muted italic whitespace-nowrap">${escapeHtml(r.date)}</span>
                 <span class="recommended-title">${escapeHtml(r.title)}</span>
               </div>
             </a>`;
@@ -395,6 +395,17 @@ for (const dir of postDirs) {
 //       article, not the date of the blog post that mentions it.
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
+  {
+    date: "2026-6-5",
+    recommendedAt: "2026-07-05T23:24:05+08:00",
+    title: "PI Architecture EXPLAINED | Agent Loop, Tools, TUI and More",
+    url: "https://www.youtube.com/watch?v=gTeujlv8qK0",
+    kind: "Video",
+    site: "YouTube",
+    description: "",
+    thumbnail: "https://i.ytimg.com/vi/gTeujlv8qK0/hqdefault.jpg",
+    notes: "Alejandro讲解tree的那一段的时候讲挺清晰的，用白板做笔记，画思维导图的方式娓娓道来。",
+  },
   {
     date: "2023-7-27",
     recommendedAt: "2026-07-03T12:13:30+08:00",
