@@ -396,6 +396,17 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2026-7-4",
+    recommendedAt: "2026-07-07T23:29:00+08:00",
+    title: "Harness Engineering for Self-Improvement",
+    url: "https://lilianweng.github.io/posts/2026-07-04-harness/",
+    kind: "Reading",
+    site: "Lil'Log",
+    description: "",
+    thumbnail: "/recommended-reading/media/lilian-weng-harness-engineering.png",
+    notes: "简单明了讲解了 Harness 的各种尝试",
+  },
+  {
     date: "2026-6-5",
     recommendedAt: "2026-07-05T23:24:05+08:00",
     title: "PI Architecture EXPLAINED | Agent Loop, Tools, TUI and More",
