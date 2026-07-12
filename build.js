@@ -177,7 +177,7 @@ function renderPost(postDir) {
   // Read template
   let template = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
   template = template.replaceAll('{{title}}', escapeHtml(fm.title || slug));
-  template = template.replace('{{description}}', escapeHtml(fm.lede || fm.title || slug));
+  template = template.replaceAll('{{description}}', escapeHtml(fm.lede || fm.title || slug));
   template = template.replace('{{content}}', content);
   template = template.replace('{{slug}}', slug);
   template = template.replace('{{footerLine}}', escapeHtml(fm.footerLine || `${fm.title || slug} — ${shortDate}`));
