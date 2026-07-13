@@ -277,10 +277,13 @@ function renderRecommendedCard(item) {
   const notes = item.notes
     ? `<p class="recommendation-note">${escapeHtml(item.notes)}</p>`
     : '';
+  const commentLink = item.commentUrl
+    ? `<p class="recommendation-note">我的评论：<a href="${escapeHtml(item.commentUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.commentTitle || item.commentUrl)}</a></p>`
+    : '';
   const description = item.description
     ? `<p class="recommendation-description">${escapeHtml(item.description)}</p>`
     : '';
-  const hasAnnotations = notes;
+  const hasAnnotations = notes || commentLink;
 
   return `
     <article class="recommendation">
@@ -296,7 +299,7 @@ function renderRecommendedCard(item) {
         <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
       </h4>
       ${description}
-      ${hasAnnotations ? `<div class="recommendation-thread">${notes}</div>` : ''}
+      ${hasAnnotations ? `<div class="recommendation-thread">${notes}${commentLink}</div>` : ''}
     </article>
   `;
 }
@@ -395,6 +398,30 @@ for (const dir of postDirs) {
 //       article, not the date of the blog post that mentions it.
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
+  {
+    date: "2026-7-8",
+    recommendedAt: "2026-07-13T11:14:50+08:00",
+    title: "I rebuilt Posia using the Pi Agent SDK",
+    url: "https://x.com/jasonzhou1993/status/2074811444038894078?s=20",
+    kind: "Video",
+    site: "x.com",
+    description: "",
+    thumbnail: "",
+    notes: "17 分钟快速介绍 Pi Agent SDK：约 15 行代码即可搭起核心 Agent，扩展系统高度灵活，还展示了如何用扩展减少 80%–96% 的工具 token，以及如何构建托管 Agent。很棒的入门介绍！",
+  },
+  {
+    date: "2026-7-4",
+    recommendedAt: "2026-07-13T11:14:49+08:00",
+    title: "Better Models: Worse Tools",
+    url: "https://lucumr.pocoo.org/2026/7/4/better-models-worse-tools/",
+    kind: "Reading",
+    site: "Armin Ronacher's Thoughts and Writings",
+    description: "",
+    thumbnail: "",
+    notes: "反直觉的观点：模型在某个宽容的 Harness 中进行后训练，可能会过度适配它的工具调用方式，反而削弱在其他 Harness 中严格遵循 Tool Schema 的能力。",
+    commentTitle: "《Harness 会退化模型能力》",
+    commentUrl: "https://zwrong.github.io/2026-07-harness-degrades-model-capability/",
+  },
   {
     date: "2026-7-4",
     recommendedAt: "2026-07-07T23:29:00+08:00",
