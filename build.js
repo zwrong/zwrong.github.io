@@ -407,7 +407,7 @@ const recommended = [
     site: "x.com",
     description: "",
     thumbnail: "",
-    notes: "17 分钟快速介绍 Pi Agent SDK：约 15 行代码即可搭起核心 Agent，扩展系统高度灵活，还展示了如何用扩展减少 80%–96% 的工具 token，以及如何构建托管 Agent。很棒的入门介绍！",
+    notes: "recommend reading! give a brief introduction about pi agent sdk, great!",
   },
   {
     date: "2026-7-4",
@@ -418,7 +418,7 @@ const recommended = [
     site: "Armin Ronacher's Thoughts and Writings",
     description: "",
     thumbnail: "",
-    notes: "反直觉的观点：模型在某个宽容的 Harness 中进行后训练，可能会过度适配它的工具调用方式，反而削弱在其他 Harness 中严格遵循 Tool Schema 的能力。",
+    notes: "",
     commentTitle: "《Harness 会退化模型能力》",
     commentUrl: "https://zwrong.github.io/2026-07-harness-degrades-model-capability/",
   },
