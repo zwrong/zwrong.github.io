@@ -399,6 +399,17 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2026-7-13",
+    recommendedAt: "2026-07-20T11:42:32+08:00",
+    title: "State of Agentic Coding #8 with Mario, Armin, and Ben",
+    url: "https://www.youtube.com/watch?v=_lfpEy_9vf0",
+    kind: "Video",
+    site: "YouTube",
+    description: "",
+    thumbnail: "https://i.ytimg.com/vi/_lfpEy_9vf0/hqdefault.jpg",
+    notes: "I can't see the future",
+  },
+  {
     date: "2026-7-8",
     recommendedAt: "2026-07-13T11:14:50+08:00",
     title: "I rebuilt Posia using the Pi Agent SDK",
