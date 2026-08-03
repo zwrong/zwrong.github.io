@@ -399,6 +399,17 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2026-7-22",
+    recommendedAt: "2026-08-03T22:23:41+08:00",
+    title: "Prompt Caching In Agents",
+    url: "https://earendil.com/posts/prompt-caching/",
+    kind: "Reading",
+    site: "Earendil",
+    description: "",
+    thumbnail: "https://earendil.com/static/og/posts/prompt-caching.png",
+    notes: "原来如此 reasoning level changes 也会导致缓存丢失",
+  },
+  {
     date: "2026-7-13",
     recommendedAt: "2026-07-20T11:42:32+08:00",
     title: "State of Agentic Coding #8 with Mario, Armin, and Ben",
