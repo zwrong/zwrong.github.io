@@ -9,3 +9,6 @@ sourceOfBlog
 *.SKILL.draft.md
 *.evals.draft.json
 friends-homepage.png
+CLAUDE.md
+.agents/
+AGENTS.md
