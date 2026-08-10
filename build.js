@@ -399,6 +399,17 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2026-8-3",
+    recommendedAt: "2026-08-10T10:35:56+08:00",
+    title: "Don't be a meat proxy",
+    url: "https://gruhn.me/blog/2026-08-03/",
+    kind: "Reading",
+    site: "gruhn.me",
+    description: "",
+    thumbnail: "",
+    notes: "推荐这一篇blog。这篇blog 挺短的，很快就可以看完。\n\n讲的是 不要去当 AI的传话筒。就是我们看到Claude Code给出了回答以后，我们不要直接复制粘贴Claude Code的回答，而是真正的去看Claude Code的回答是什么，然后思考Agent为什么会这样说，最后再用自己的理解自己的话，把Claude的东西表达一遍。\n\n大概这样子做能够降低 听 的成本，让别人更容易理解。\n\nBlog 举了一个 代码 review 的例子。\n\n就是当写代码的成本足够低的时候，我们可以轻松的给一个项目贡献 PR。我们跟 Claude Code 说想做的，然后也不需要看 Claude Code 给的代码。\n\n如果 reviewer（审核的人） 给了一些意见 就把这些意见 复制给 Claude，这样反复迭代几轮。最终写代码的人是 reviewer 和 Claude Code，我们成了中间的传话筒。",
+  },
+  {
     date: "2026-7-22",
     recommendedAt: "2026-08-03T22:23:41+08:00",
     title: "Prompt Caching In Agents",
