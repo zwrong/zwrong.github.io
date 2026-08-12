@@ -13,7 +13,7 @@ lede: "久违地感受到学习的快乐。一开始只是看了一篇博客，�
 
 视频是用 [Cap](https://github.com/CapSoftware/Cap) 录制的，在字幕和进度条上花了比较多时间。字幕是用 Gemini 3.6 Flash 的 API（免费的）识别视频的声音，但是这样制作出来的时间轴不太对，有一些专业的术语，比如Grok，Reasoning Effort 这些要再用大模型处理一下（我用的是 Deepseek-v4-flash-Official）。用剪映识别出来的字幕，时间轴卡的特别好（感谢 [@肖恩君Sean](https://x.com/ShenSeanChen) 的指导，他在评论区告诉我视频的字幕是用剪映做的），再结合之前Gemini识别的字幕，优化一下就用上了。终于打通了字幕这个难关。
 
-字幕的烧录是用 [Pi](https://pi.dev) 搭配 Deepseek-v4-flash-Official 模型 用 FFmpeg CLI 烧录的，但是一开始烧录出来的视频不仅内存大，还没有 [Cap](https://github.com/CapSoftware/Cap) 导出来的清晰，把 [Cap](https://github.com/CapSoftware/Cap) 的 Github 仓库复制给 Agent，Agent 就找到了最高清的导出参数，最后导出来的视频在画质和内存大小上就就跟 [Cap](https://github.com/CapSoftware/Cap) 导出来的一样好了。
+字幕的烧录是用 [Pi](https://pi.dev) 搭配 Deepseek-v4-flash-Official 模型 用 FFmpeg CLI 烧录的，但是一开始烧录出来的视频不仅内存大，还没有 [Cap](https://github.com/CapSoftware/Cap) 导出来的清晰，把 [Cap](https://github.com/CapSoftware/Cap) 的 Github 仓库复制给 Agent，Agent 就找到了最高清的导出参数，最后导出来的视频在画质和内存大小上就跟 [Cap](https://github.com/CapSoftware/Cap) 导出来的一样好了。
 
 进度条的制作参考了 [AI半山博士](https://xhslink.cn/m/3KavUUf8xu2) 的Github项目 [chapter-progress-bar-plus](https://github.com/DrBanshan/chapter-progress-bar-plus)，以及 [@张小珺商业访谈录](https://x.com/zhang_benita) 的进度条样式，用 Deepseek 调了几版后有了最终的效果。
 
