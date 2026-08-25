@@ -1,5 +1,5 @@
 ---
-title: "A Good Prompt Isn't as Good as a Good Harness"
+title: "Good Harness Better Than Good Prompt"
 date: 2026 年 5 月 26 日
 footerLine: "Vinen's Blog — About Agent, Harness"
 lede: "Prompt is a soft constraint; Harness is a hard constraint. From Claude Code to Opencode, see how a Hook stops an Agent from making a mistake at the critical moment."
