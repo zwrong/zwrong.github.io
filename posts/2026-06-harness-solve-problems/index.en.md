@@ -283,21 +283,21 @@ The cause of Agent hallucinations has always been the hardest question for me to
 
 I think there are several possible reasons:
 
-### 1. The Agent Confuses Action Completion with Goal Completion.
+**1. The Agent Confuses Action Completion with Goal Completion.**
 
 The Tool Result only tells the Agent that an action was completed, but it does not tell the Agent that the task was completed.
 
 Ultimately, our goal is to upvote a story. But does clicking the upvote button equal completing our goal? We need to clearly define for the Agent what counts as task completion.
 
-### 2. The Agent Has No Verification Awareness.
+**2. The Agent Has No Verification Awareness.**
 
 The Agent does not verify what state it is in. Have we provided the Agent with sufficient means to verify its own results? For example, earlier, calling browser_get_stories could show the upvote status of each story. The Agent could call browser_url to check which page it is currently on. If it's on the Hacker News homepage, it could continue to call browser_get_stories to check whether it has upvoted the top story.
 
-### 3. The Agent Does Not Understand the Concept of Upvoting.
+**3. The Agent Does Not Understand the Concept of Upvoting.**
 
 Think about how we use platforms like Xiaohongshu, Weibo, WeChat Moments, etc. Upvoting a post expresses our agreement with the post — it involves a subject. So you need to log in first before upvoting. Of course, there are also platforms that don't require login to upvote. In the Agent's training data, there is a large amount of static knowledge and text. However, for dynamic concepts — like the action of upvoting — the proportion in the training data is very small. Therefore, the Agent inherently lacks the knowledge that it needs to act step by step.
 
-### 4. The Agent Does Not Understand the Meaning of the URL https://news.ycombinator.com/vote?id=48428025&how=up&goto=news.
+**4. The Agent Does Not Understand the Meaning of the URL <https://news.ycombinator.com/vote?id=48428025&how=up&goto=news>.**
 
 I tried asking Deepseek about the meaning of this URL:
 
