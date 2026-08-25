@@ -382,10 +382,10 @@ function buildIndex(posts, recommended, lang) {
 
   const postListHtml = posts.map(p => {
     const href = `./${p.slug}/`;
-    return `<a href="${href}" class="flex gap-4 items-center">
-      <div class="flex row gap-4 items-baseline">
-        <span class="text-sm text-muted italic whitespace-nowrap">${escapeHtml(formatDateShort(p.date))}</span>
-        <span>${escapeHtml(p.title)}</span>
+    return `<a href="${href}" class="recommended-link">
+      <div class="recommended-row">
+        <span class="recommended-date text-sm text-muted italic whitespace-nowrap">${escapeHtml(formatDateShort(p.date))}</span>
+        <span class="recommended-title">${escapeHtml(p.title)}</span>
       </div>
     </a>`;
   }).join('\n');
