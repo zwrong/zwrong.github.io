@@ -7,14 +7,53 @@ import MarkdownIt from 'markdown-it';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const POSTS_DIR = path.join(__dirname, 'posts');
 const DIST_DIR = path.join(__dirname, 'dist');
-const TEMPLATE_PATH = path.join(__dirname, 'template.html');
-const INDEX_TEMPLATE_PATH = path.join(__dirname, 'index-template.html');
-const RECOMMENDED_TEMPLATE_PATH = path.join(__dirname, 'recommended-template.html');
+
+// Language configuration. zh lives at the site root; en lives under /en/.
+const LANGS = {
+  zh: {
+    pathPrefix: '',
+    templateIndex: 'index-template.html',
+    templatePost: 'template.html',
+    templateRecommended: 'recommended-template.html',
+    homeHref: '/',
+    backHomeText: '返回首页',
+    tocHeader: '目录',
+    recommendedSectionTitle: '推荐阅读 / 观看',
+    recommendedMore: '更多推荐阅读 / 观看 →',
+    recommendedPageTitle: '推荐阅读 / 观看 — Vinen',
+    recommendedPageDescription: '我看过并推荐的文章和视频。',
+    recommendedUpdated: '最后更新：',
+    myComment: '我的评论：',
+  },
+  en: {
+    pathPrefix: 'en/',
+    templateIndex: 'index-template-en.html',
+    templatePost: 'template-en.html',
+    templateRecommended: 'recommended-template-en.html',
+    homeHref: '/en/',
+    backHomeText: 'Back to home',
+    tocHeader: 'Table of Contents',
+    recommendedSectionTitle: 'Recommended Reading / Viewing',
+    recommendedMore: 'More recommended reading/viewing →',
+    recommendedPageTitle: 'Recommended Reading / Viewing — Vinen',
+    recommendedPageDescription: 'Articles and videos I\'ve read and recommend.',
+    recommendedUpdated: 'Last updated: ',
+    myComment: 'My comment: ',
+  },
+};
 
 function escapeHtml(str) {
   return String(str || '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/**
+ * Build the <language-toggle> element for a given page. The component
+ * shows "中文 / EN" and links to the alternate-language version of the page.
+ */
+function langToggleHtml(lang, zhUrl, enUrl) {
+  return `<language-toggle data-lang="${lang}" data-en-url="${enUrl}" data-zh-url="${zhUrl}"></language-toggle>`;
 }
 
 /**
@@ -96,9 +135,13 @@ function preprocessContent(content, postDir) {
   return output.join('\n');
 }
 
-function renderPost(postDir) {
-  const mdPath = path.join(postDir, 'index.md');
+function renderPost(postDir, lang) {
+  const mdPath = lang === 'en'
+    ? path.join(postDir, 'index.en.md')
+    : path.join(postDir, 'index.md');
   if (!fs.existsSync(mdPath)) return;
+
+  const langConf = LANGS[lang];
 
   const raw = fs.readFileSync(mdPath, 'utf-8');
   const { data: fm, content: mdContent } = matter(raw);
@@ -150,7 +193,7 @@ function renderPost(postDir) {
   let tocHtml = '';
   if (tocItems.length > 0) {
     tocHtml = `
-      <h1 class="toc-header">目录</h1>
+      <h1 class="toc-header">${langConf.tocHeader}</h1>
       <div class="toc">
         <ul>
           ${tocItems.map(item => {
@@ -175,18 +218,24 @@ function renderPost(postDir) {
   `;
 
   // Read template
-  let template = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
+  let template = fs.readFileSync(path.join(__dirname, langConf.templatePost), 'utf-8');
+  const zhUrl = `/${slug}/`;
+  const enUrl = `/en/${slug}/`;
   template = template.replaceAll('{{title}}', escapeHtml(fm.title || slug));
   template = template.replaceAll('{{description}}', escapeHtml(fm.lede || fm.title || slug));
-  template = template.replace('{{content}}', content);
-  template = template.replace('{{slug}}', slug);
-  template = template.replace('{{footerLine}}', escapeHtml(fm.footerLine || `${fm.title || slug} — ${shortDate}`));
+  template = template.replaceAll('{{content}}', content);
+  template = template.replaceAll('{{slug}}', slug);
+  template = template.replaceAll('{{footerLine}}', escapeHtml(fm.footerLine || `${fm.title || slug} — ${shortDate}`));
+  template = template.replaceAll('{{homeHref}}', langConf.homeHref);
+  template = template.replaceAll('{{backHomeText}}', langConf.backHomeText);
+  template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, zhUrl, enUrl));
+  template = template.replaceAll('{{canonicalUrl}}', `https://vinen.dev/${langConf.pathPrefix}${slug}/`);
 
   // Write output
-  const outDir = path.join(DIST_DIR, slug);
+  const outDir = path.join(DIST_DIR, langConf.pathPrefix, slug);
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'index.html'), template, 'utf-8');
-  console.log(`  built: dist/${slug}/index.html`);
+  console.log(`  built: dist/${langConf.pathPrefix}${slug}/index.html`);
 
   // Copy assets (image directories)
   copyAssets(postDir, outDir);
@@ -243,7 +292,7 @@ function copyAssets(srcDir, destDir) {
       const src = path.join(srcDir, entry.name);
       const dest = path.join(destDir, entry.name);
       fs.cpSync(src, dest, { recursive: true });
-      console.log(`  copied: dist/${path.basename(destDir)}/${entry.name}/`);
+      console.log(`  copied: ${path.relative(path.join(__dirname, 'dist'), destDir)}/${entry.name}/`);
     }
   }
 }
@@ -269,21 +318,38 @@ function formatDateShort(dateStr) {
   return `${isoMatch[1]}-${parseInt(isoMatch[2], 10)}-${parseInt(isoMatch[3], 10)}`;
 }
 
-function renderRecommendedCard(item) {
+/**
+ * Pick the language-appropriate value for a recommendation field.
+ */
+function pick(item, baseKey, lang) {
+  if (lang === 'en') {
+    return item[baseKey + 'En'] != null && item[baseKey + 'En'] !== '' ? item[baseKey + 'En'] : item[baseKey];
+  }
+  return item[baseKey];
+}
+
+function renderRecommendedCard(item, lang) {
+  const langConf = LANGS[lang];
   const site = item.site || extractHostname(item.url);
   const thumbnail = item.thumbnail
     ? `<img class="recommendation-thumb" loading="lazy" src="${escapeHtml(item.thumbnail)}" alt="">`
     : '';
-  const notes = item.notes
-    ? `<p class="recommendation-note">${escapeHtml(item.notes)}</p>`
+  const title = pick(item, 'title', lang);
+  const notes = pick(item, 'notes', lang);
+  const commentTitle = pick(item, 'commentTitle', lang);
+  const commentUrl = lang === 'en'
+    ? (item.commentUrlEn || item.commentUrl)
+    : item.commentUrl;
+  const notesHtml = notes
+    ? `<p class="recommendation-note">${escapeHtml(notes)}</p>`
     : '';
-  const commentLink = item.commentUrl
-    ? `<p class="recommendation-note">我的评论：<a href="${escapeHtml(item.commentUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.commentTitle || item.commentUrl)}</a></p>`
+  const commentLink = commentUrl
+    ? `<p class="recommendation-note">${langConf.myComment}<a href="${escapeHtml(commentUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(commentTitle || commentUrl)}</a></p>`
     : '';
   const description = item.description
     ? `<p class="recommendation-description">${escapeHtml(item.description)}</p>`
     : '';
-  const hasAnnotations = notes || commentLink;
+  const hasAnnotations = notesHtml || commentLink;
 
   return `
     <article class="recommendation">
@@ -296,15 +362,17 @@ function renderRecommendedCard(item) {
         <span class="recommendation-site">${escapeHtml(site)}</span>
       </div>
       <h4 class="recommendation-title">
-        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
+        <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
       </h4>
       ${description}
-      ${hasAnnotations ? `<div class="recommendation-thread">${notes}${commentLink}</div>` : ''}
+      ${hasAnnotations ? `<div class="recommendation-thread">${notesHtml}${commentLink}</div>` : ''}
     </article>
   `;
 }
 
-function buildIndex(posts, recommended) {
+function buildIndex(posts, recommended, lang) {
+  const langConf = LANGS[lang];
+
   // Sort by date descending
   posts.sort((a, b) => {
     if (normalizeDate(a.date) < normalizeDate(b.date)) return 1;
@@ -326,46 +394,57 @@ function buildIndex(posts, recommended) {
   const homepageRecommended = recommended.slice(0, 5);
   const recommendedHtml = homepageRecommended.length > 0
     ? `<div class="recommended-section">
-        <h4 class="mb-4">Recommended Reading / Viewing</h4>
+        <h4 class="mb-4">${langConf.recommendedSectionTitle}</h4>
         <div class="flex flex-col gap-3">
           ${homepageRecommended.map(r => {
             const href = escapeHtml(r.url);
+            const title = pick(r, 'title', lang);
             return `<a href="${href}" target="_blank" rel="noopener" class="recommended-link">
               <div class="recommended-row">
                 <span class="recommended-date text-sm text-muted italic whitespace-nowrap">${escapeHtml(r.date)}</span>
-                <span class="recommended-title">${escapeHtml(r.title)}</span>
+                <span class="recommended-title">${escapeHtml(title)}</span>
               </div>
             </a>`;
           }).join('\n')}
-          <a href="/recommended-reading/" class="recommended-more-link">More recommended reading/viewing &rarr;</a>
+          <a href="/${langConf.pathPrefix}recommended-reading/" class="recommended-more-link">${langConf.recommendedMore}</a>
         </div>
       </div>`
     : '';
 
-  let template = fs.readFileSync(INDEX_TEMPLATE_PATH, 'utf-8');
-  template = template.replace('{{postList}}', postListHtml);
-  template = template.replace('{{recommended}}', recommendedHtml);
+  let template = fs.readFileSync(path.join(__dirname, langConf.templateIndex), 'utf-8');
+  template = template.replaceAll('{{postList}}', postListHtml);
+  template = template.replaceAll('{{recommended}}', recommendedHtml);
+  template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, '/', '/en/'));
+  template = template.replaceAll('{{homeHref}}', langConf.homeHref);
+  template = template.replaceAll('{{urlBase}}', langConf.pathPrefix);
 
-  fs.writeFileSync(path.join(DIST_DIR, 'index.html'), template, 'utf-8');
-  console.log('  built: dist/index.html');
+  const outDir = path.join(DIST_DIR, langConf.pathPrefix);
+  fs.mkdirSync(outDir, { recursive: true });
+  fs.writeFileSync(path.join(outDir, 'index.html'), template, 'utf-8');
+  console.log(`  built: dist/${langConf.pathPrefix}index.html`);
 }
 
-function buildRecommendedPage(recommended) {
-  const listHtml = recommended.map(renderRecommendedCard).join('\n');
+function buildRecommendedPage(recommended, lang) {
+  const langConf = LANGS[lang];
+  const listHtml = recommended.map(r => renderRecommendedCard(r, lang)).join('\n');
 
   const now = new Date();
   const updatedDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
 
-  let template = fs.readFileSync(RECOMMENDED_TEMPLATE_PATH, 'utf-8');
-  template = template.replaceAll('{{pageTitle}}', 'Recommended Reading / Viewing — Vinen');
-  template = template.replace('{{pageDescription}}', 'Articles and videos I\'ve read and recommend.');
-  template = template.replace('{{recommendedList}}', listHtml);
-  template = template.replace('{{updatedDate}}', updatedDate);
+  let template = fs.readFileSync(path.join(__dirname, langConf.templateRecommended), 'utf-8');
+  template = template.replaceAll('{{pageTitle}}', langConf.recommendedPageTitle);
+  template = template.replaceAll('{{pageDescription}}', langConf.recommendedPageDescription);
+  template = template.replaceAll('{{recommendedList}}', listHtml);
+  template = template.replaceAll('{{updatedDate}}', updatedDate);
+  template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, '/recommended-reading/', '/en/recommended-reading/'));
+  template = template.replaceAll('{{homeHref}}', langConf.homeHref);
+  template = template.replaceAll('{{backHomeText}}', langConf.backHomeText);
+  template = template.replaceAll('{{canonicalUrl}}', `https://vinen.dev/${langConf.pathPrefix}recommended-reading/`);
 
-  const outDir = path.join(DIST_DIR, 'recommended-reading');
+  const outDir = path.join(DIST_DIR, langConf.pathPrefix, 'recommended-reading');
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'index.html'), template, 'utf-8');
-  console.log('  built: dist/recommended-reading/index.html');
+  console.log(`  built: dist/${langConf.pathPrefix}recommended-reading/index.html`);
 }
 
 // Main
@@ -387,10 +466,13 @@ if (postDirs.length === 0) {
 
 fs.mkdirSync(DIST_DIR, { recursive: true });
 
-const posts = [];
+const postsZh = [];
+const postsEn = [];
 for (const dir of postDirs) {
-  const post = renderPost(dir);
-  if (post) posts.push(post);
+  const pZh = renderPost(dir, 'zh');
+  if (pZh) postsZh.push(pZh);
+  const pEn = renderPost(dir, 'en');
+  if (pEn) postsEn.push(pEn);
 }
 
 // Recommended reading / viewing
@@ -408,6 +490,7 @@ const recommended = [
     description: "",
     thumbnail: "",
     notes: "推荐这一篇blog。这篇blog 挺短的，很快就可以看完。\n\n讲的是 不要去当 AI的传话筒。就是我们看到Claude Code给出了回答以后，我们不要直接复制粘贴Claude Code的回答，而是真正的去看Claude Code的回答是什么，然后思考Agent为什么会这样说，最后再用自己的理解自己的话，把Claude的东西表达一遍。\n\n大概这样子做能够降低 听 的成本，让别人更容易理解。\n\nBlog 举了一个 代码 review 的例子。\n\n就是当写代码的成本足够低的时候，我们可以轻松的给一个项目贡献 PR。我们跟 Claude Code 说想做的，然后也不需要看 Claude Code 给的代码。\n\n如果 reviewer（审核的人） 给了一些意见 就把这些意见 复制给 Claude，这样反复迭代几轮。最终写代码的人是 reviewer 和 Claude Code，我们成了中间的传话筒。",
+    notesEn: "I recommend this blog post. It's quite short and quick to read.\n\nIt's about not being a mouthpiece for AI. When we see Claude Code give an answer, we shouldn't just copy-paste it. Instead, we should actually look at what Claude Code's answer is, think about why the Agent said that, and then express what Claude said in our own words based on our own understanding.\n\nDoing this can lower the cost of listening and make it easier for others to understand.\n\nThe blog gives an example of code review.\n\nWhen the cost of writing code is low enough, we can easily contribute PRs to a project. We tell Claude Code what we want, without even looking at the code Claude Code produces.\n\nIf a reviewer gives feedback, just copy that feedback to Claude and iterate a few rounds. In the end, the people writing the code are the reviewer and Claude Code, and we've become the middleman mouthpiece.",
   },
   {
     date: "2026-7-22",
@@ -419,6 +502,7 @@ const recommended = [
     description: "",
     thumbnail: "https://earendil.com/static/og/posts/prompt-caching.png",
     notes: "原来如此 reasoning level changes 也会导致缓存丢失",
+    notesEn: "I see — reasoning level changes also cause the cache to be lost.",
   },
   {
     date: "2026-7-13",
@@ -430,6 +514,7 @@ const recommended = [
     description: "",
     thumbnail: "https://i.ytimg.com/vi/_lfpEy_9vf0/hqdefault.jpg",
     notes: "I can't see the future",
+    notesEn: "I can't see the future",
   },
   {
     date: "2026-7-8",
@@ -441,6 +526,7 @@ const recommended = [
     description: "",
     thumbnail: "",
     notes: "recommend reading! give a brief introduction about pi agent sdk, great!",
+    notesEn: "recommend reading! give a brief introduction about pi agent sdk, great!",
   },
   {
     date: "2026-7-4",
@@ -452,8 +538,11 @@ const recommended = [
     description: "",
     thumbnail: "",
     notes: "",
+    notesEn: "",
     commentTitle: "《Harness 会退化模型能力》",
+    commentTitleEn: "Harness Can Degrade Model Capability",
     commentUrl: "https://zwrong.github.io/2026-07-harness-degrades-model-capability/",
+    commentUrlEn: "https://zwrong.github.io/en/2026-07-harness-degrades-model-capability/",
   },
   {
     date: "2026-7-4",
@@ -465,6 +554,7 @@ const recommended = [
     description: "",
     thumbnail: "/recommended-reading/media/lilian-weng-harness-engineering.png",
     notes: "简单明了讲解了 Harness 的各种尝试",
+    notesEn: "A clear and simple explanation of the various Harness attempts.",
   },
   {
     date: "2026-6-5",
@@ -476,6 +566,7 @@ const recommended = [
     description: "",
     thumbnail: "https://i.ytimg.com/vi/gTeujlv8qK0/hqdefault.jpg",
     notes: "Alejandro讲解tree的那一段的时候讲挺清晰的，用白板做笔记，画思维导图的方式娓娓道来。",
+    notesEn: "The part where Alejandro explains the tree is quite clear — he takes notes on a whiteboard and draws mind maps, explaining it step by step.",
   },
   {
     date: "2026-6-25",
@@ -487,6 +578,7 @@ const recommended = [
     description: "",
     thumbnail: "https://i.ytimg.com/vi/5duo9qHw660/hqdefault.jpg",
     notes: "用白板的形式，清晰讲解了coding agent的架构",
+    notesEn: "Explains the coding agent architecture clearly with a whiteboard.",
   },
   {
     date: "2023-7-27",
@@ -498,17 +590,20 @@ const recommended = [
     description: "",
     thumbnail: "https://i.ytimg.com/vi/q0cjcw3af_k/hqdefault.jpg",
     notes: "这个播客给我一些信心：personal brand compounds，在早期会比较慢，突破了一个点后就会持续带来收益。“And I know I'm capable of sxxx.” 能够清晰地、有自信地认识到自己能做成事情。",
+    notesEn: "This podcast gave me some confidence: personal brand compounds. It's slow early on, but once you break through a point it keeps paying off. \"And I know I'm capable of sxxx.\" Being able to clearly and confidently recognize that I can get things done.",
   },
   {
     date: "2026-5-11",
     recommendedAt: "2026-07-03T10:11:00+08:00",
     title: "Harness不是目的，知识才是护城河 —— 一个AI工程交付团队的知识沉淀实践",
+    titleEn: "Harness Isn't the Goal, Knowledge Is the Moat — Knowledge Practices of an AI Engineering Delivery Team",
     url: "https://mp.weixin.qq.com/s/JV4-oPP0jjsBCZ4tW3Gy1g?click_id=5&scene=1",
     kind: "Reading",
     site: "mp.weixin.qq.com",
     description: "",
     thumbnail: "/recommended-reading/media/tencent-tech-engineer-knowledge-moat.png",
     notes: "认同文章的核心观点，领域知识是团队的核心资产，再聪明的模型也没办法提前知道团队在什么地方踩了坑。对文章中“上下文效率提升了一个数量级”有存疑，文章没有对上下文效率进行定义。",
+    notesEn: "I agree with the article's core point: domain knowledge is the team's core asset. No matter how smart the model, it can't know in advance where the team has stepped on a landmine. I'm skeptical of the article's claim that \"context efficiency improved by an order of magnitude,\" since it never defines context efficiency.",
   },
   {
     date: "2026-6-24",
@@ -520,6 +615,7 @@ const recommended = [
     description: "",
     thumbnail: "/recommended-reading/media/linus-opinion-ai.png",
     notes: "",
+    notesEn: "",
   },
   {
     date: "2026-5-18",
@@ -531,6 +627,7 @@ const recommended = [
     description: "",
     thumbnail: "https://i.ytimg.com/vi/C_GG5g38vLU/hqdefault.jpg",
     notes: "20分钟内讲清楚了什么是Harness，为什么需要Harness，如何构建Harness，我希望我也能做到！",
+    notesEn: "In 20 minutes he clearly explained what a Harness is, why we need one, and how to build one. I hope I can do the same!",
   },
   {
     date: "2025-11-30",
@@ -542,17 +639,20 @@ const recommended = [
     description: "",
     thumbnail: "https://mariozechner.at/posts/2025-11-30-pi-coding-agent/media/header.png",
     notes: "原来Pi默认YOLO的原因是这个。",
+    notesEn: "So this is the reason Pi defaults to YOLO.",
   },
   {
     date: "2026-3-29",
     recommendedAt: "2026-07-03T10:07:00+08:00",
     title: "从 Claude Code 看 Harness Engineer 的设计",
+    titleEn: "Harness Engineer Design as Seen from Claude Code",
     url: "https://zhuanlan.zhihu.com/p/2021603278606087058",
     kind: "Reading",
     site: "zhuanlan.zhihu.com",
     description: "",
     thumbnail: "",
     notes: "",
+    notesEn: "",
   },
   {
     date: "2026-1-17",
@@ -564,6 +664,7 @@ const recommended = [
     description: "",
     thumbnail: "/recommended-reading/media/claude-code-shorthand.png",
     notes: "系统讲解了 Claude Code 的组成。用 tmux 的 hook 跑长时间的任务让我印象深刻。",
+    notesEn: "A systematic explanation of how Claude Code is composed. Using a tmux hook to run long-running tasks left a strong impression on me.",
   },
   {
     date: "2026-3-25",
@@ -575,12 +676,15 @@ const recommended = [
     description: "",
     thumbnail: "https://mariozechner.at/posts/2026-03-25-thoughts-on-slowing-the-fuck-down/media/header.png",
     notes: "我时常困惑AI生成的代码这么快，人一行一行review不过来该怎么办？于是遇到了这篇文章。",
+    notesEn: "I'm often puzzled: AI generates code so fast that I can't review it line by line. Then I came across this article.",
   },
 ];
 recommended.sort((a, b) => new Date(b.recommendedAt).getTime() - new Date(a.recommendedAt).getTime());
 
-buildIndex(posts, recommended);
-buildRecommendedPage(recommended);
+buildIndex(postsZh, recommended, 'zh');
+buildIndex(postsEn, recommended, 'en');
+buildRecommendedPage(recommended, 'zh');
+buildRecommendedPage(recommended, 'en');
 
 // Copy recommended media files
 const recommendedMediaSrc = path.join(__dirname, 'recommended-media');

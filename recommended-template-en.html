@@ -1,20 +1,20 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="stylesheet" type="text/css" href="/style.css" />
-<title>{{title}}</title>
-<meta name="description" content="{{description}}" />
-<meta property="og:title" content="{{title}}" />
-<meta property="og:description" content="{{description}}" />
-<meta property="og:type" content="article" />
+<title>{{pageTitle}}</title>
+<meta name="description" content="{{pageDescription}}" />
+<meta property="og:title" content="{{pageTitle}}" />
+<meta property="og:description" content="{{pageDescription}}" />
+<meta property="og:type" content="website" />
 <meta property="og:url" content="{{canonicalUrl}}" />
 <meta property="og:image" content="https://zwrong.github.io/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="{{title}}" />
-<meta name="twitter:description" content="{{description}}" />
+<meta name="twitter:title" content="{{pageTitle}}" />
+<meta name="twitter:description" content="{{pageDescription}}" />
 <meta name="twitter:site" content="Vinen" />
 <script src="/components.js"></script>
 </head>
@@ -33,25 +33,19 @@
       </div>
     </div>
 
-    <article>
-      {{content}}
-    </article>
+    <h1 class="recommended-page-title">Recommended Reading / Viewing</h1>
+    <p class="text-sm text-muted mb-8">Articles and videos I've read and recommend.</p>
+
+    <div class="recommended-list">
+      {{recommendedList}}
+    </div>
 
     <footer class="mt-8 pt-6" style="border-top: 1px solid var(--border-color);">
-      <p class="text-sm text-muted">{{footerLine}}</p>
+      <p class="text-sm text-muted">Last updated: {{updatedDate}}</p>
       <p class="text-sm text-muted mt-2">
         <a href="{{homeHref}}" style="border-bottom: 1px solid var(--border-color);">&larr; {{backHomeText}}</a>
       </p>
     </footer>
   </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof hljs !== 'undefined') {
-        hljs.highlightAll();
-      }
-    });
-  </script>
 </body>
 </html>

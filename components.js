@@ -39,6 +39,32 @@ if (!localStorage.getItem("theme")) {
 }
 document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") ?? "light");
 
+class LanguageToggle extends HTMLElement {
+    connectedCallback() {
+        this.style.cursor = "pointer";
+        const lang = this.getAttribute("data-lang") || "zh";
+        const enUrl = this.getAttribute("data-en-url") || "/en/";
+        const zhUrl = this.getAttribute("data-zh-url") || "/";
+
+        this.innerHTML = /*html*/ `
+            <a href="${zhUrl}" class="lang-toggle ${lang === "zh" ? "active" : ""}" data-lang="zh">中文</a>
+            <span class="lang-sep">/</span>
+            <a href="${enUrl}" class="lang-toggle ${lang === "en" ? "active" : ""}" data-lang="en">EN</a>
+        `;
+
+        this.querySelectorAll("a.lang-toggle").forEach((a) => {
+            if (a.classList.contains("active")) {
+                a.addEventListener("click", (e) => e.preventDefault());
+            } else {
+                a.addEventListener("click", () => {
+                    localStorage.setItem("lang", a.getAttribute("data-lang"));
+                });
+            }
+        });
+    }
+}
+customElements.define("language-toggle", LanguageToggle);
+
 class ColorBand extends HTMLElement {
     connectedCallback() {
         this.style.display = "block";

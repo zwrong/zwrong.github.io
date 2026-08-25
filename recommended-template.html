@@ -10,7 +10,7 @@
 <meta property="og:title" content="{{pageTitle}}" />
 <meta property="og:description" content="{{pageDescription}}" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://vinen.dev/recommended-reading/" />
+<meta property="og:url" content="{{canonicalUrl}}" />
 <meta property="og:image" content="https://zwrong.github.io/og-image.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="{{pageTitle}}" />
@@ -20,27 +20,30 @@
 </head>
 <body>
   <div class="mx-auto p-6" style="max-width: 640px; width: 100%">
-    <div class="flex flex-row pb-4">
-      <a href="/" style="color: var(--text-color); text-decoration: none;">
+    <div class="flex flex-row pb-4 items-center">
+      <a href="{{homeHref}}" style="color: var(--text-color); text-decoration: none;">
         <div class="flex flex-col">
           <h2>Vinen</h2>
           <span class="text-sm">Agent <span class="thin-dot">·</span> Harness</span>
         </div>
       </a>
-      <theme-toggle class="mb-auto ml-auto"></theme-toggle>
+      <div class="flex flex-row items-center gap-3 ml-auto">
+        {{langToggle}}
+        <theme-toggle></theme-toggle>
+      </div>
     </div>
 
-    <h1 class="recommended-page-title">Recommended Reading / Viewing</h1>
-    <p class="text-sm text-muted mb-8">Articles and videos I've read and recommend.</p>
+    <h1 class="recommended-page-title">推荐阅读 / 观看</h1>
+    <p class="text-sm text-muted mb-8">我看过并推荐的文章和视频。</p>
 
     <div class="recommended-list">
       {{recommendedList}}
     </div>
 
     <footer class="mt-8 pt-6" style="border-top: 1px solid var(--border-color);">
-      <p class="text-sm text-muted">Last updated: {{updatedDate}}</p>
+      <p class="text-sm text-muted">最后更新：{{updatedDate}}</p>
       <p class="text-sm text-muted mt-2">
-        <a href="/" style="border-bottom: 1px solid var(--border-color);">&larr; Back to home</a>
+        <a href="{{homeHref}}" style="border-bottom: 1px solid var(--border-color);">&larr; {{backHomeText}}</a>
       </p>
     </footer>
   </div>

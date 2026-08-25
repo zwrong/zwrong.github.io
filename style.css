@@ -492,6 +492,36 @@ article th {
     color: var(--link-color);
 }
 
+.language-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+.lang-toggle {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    color: var(--dimmed-text-color);
+    text-decoration: none;
+    padding: 2px;
+    transition: color 0.2s ease;
+}
+.lang-toggle:hover {
+    color: var(--link-color);
+}
+.lang-toggle.active {
+    color: var(--text-color);
+    font-weight: 600;
+}
+.lang-toggle.active:hover {
+    color: var(--text-color);
+}
+.lang-sep {
+    color: var(--dimmed-text-color);
+    opacity: 0.5;
+    font-size: 0.875rem;
+    margin: 0 2px;
+}
+
 .ml-auto { margin-left: auto; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 .my-auto { margin-top: auto; margin-bottom: auto; }
