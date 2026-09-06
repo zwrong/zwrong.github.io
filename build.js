@@ -259,7 +259,7 @@ function splitHtmlAndMd(content) {
 
   let htmlDepth = 0;
   for (const line of lines) {
-    if (htmlDepth === 0 && line.match(/^<div class="(evidence-section|callout)">/)) {
+    if (htmlDepth === 0 && line.match(/^<div[\s>]/)) {
       if (current.lines.length > 0) {
         segments.push({ type: current.type, content: current.lines.join('\n') });
       }

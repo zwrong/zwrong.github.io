@@ -172,37 +172,113 @@ We can start by looking at the overall logic.
 - If the Agent upvoted, then the Agent must have called the browser_click tool — it has to actually click the upvote button, just like a person would. Second, the Agent must know which upvote button it's going to click, because only then can the "click" action hold.
 - If the Agent upvoted, then the page should stay on the homepage and shouldn't change. Because from the Agent's earlier operations, we can see that if you go upvote on Hacker News without logging in, the page redirects to the login page.
 
-```
-                          Agent performs the upvote
-                                 │
-            ┌────────────────────┴────────────────────┐
-            │                                         │
-            ▼                                         ▼
-       Behavior check                           Result check
-   (Did the Agent really click?)           (Page state after the click)
-            │                                         │
-            ▼                                         ▼
-    Did the Agent call browser_click?             Where did the page stay?
-            │                                         │
-        ┌───┴─────────┐                      ┌──────────┴──────────┐
-        │             │                      │                     │
-      Yes            No                   Homepage             Login page
-        │             │                      │                     │
-        ▼             ▼                      ▼                     ▼
-   Located the     Can't                  Logged in,            Not logged in,
-   correct upvote  complete               upvote succeeded       can't upvote
-   button?         the click              (as expected)          (per HN logic)
-   (contains "up_")?
-        │
-    ┌───┴────┐
-    │        │
-   Yes      No
-    │        │
-    ▼        ▼
-Actually    Can't
-completed   complete
-the click   the click
-```
+<div style="position: relative; width: 100%; aspect-ratio: 1400 / 700; margin-bottom: 1.5rem;">
+  <svg viewBox="0 0 1400 700" role="img" aria-label="Upvote verification flow" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;font-family:var(--font-sans);" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" style="fill:var(--border-color);"></path>
+      </marker>
+    </defs>
+
+    <!-- connectors -->
+    <g style="stroke:var(--border-color);stroke-width:1.5;fill:none;">
+      <!-- root -> level1 -->
+      <path d="M 760 80 L 760 110"></path>
+      <path d="M 480 110 L 1040 110"></path>
+      <path d="M 480 110 L 480 140" marker-end="url(#arrow)"></path>
+      <path d="M 1040 110 L 1040 140" marker-end="url(#arrow)"></path>
+      <!-- level1 -> level2 -->
+      <path d="M 480 196 L 480 298" marker-end="url(#arrow)"></path>
+      <path d="M 1040 196 L 1040 298" marker-end="url(#arrow)"></path>
+      <!-- level2 left -> children -->
+      <path d="M 480 352 L 480 420"></path>
+      <path d="M 300 420 L 660 420"></path>
+      <path d="M 300 420 L 300 470" marker-end="url(#arrow)"></path>
+      <path d="M 660 420 L 660 470" marker-end="url(#arrow)"></path>
+      <!-- level2 right -> children -->
+      <path d="M 1040 352 L 1040 420"></path>
+      <path d="M 920 420 L 1180 420"></path>
+      <path d="M 920 420 L 920 470" marker-end="url(#arrow)"></path>
+      <path d="M 1180 420 L 1180 470" marker-end="url(#arrow)"></path>
+      <!-- level3 left decision -> children -->
+      <path d="M 300 546 L 300 580"></path>
+      <path d="M 180 580 L 420 580"></path>
+      <path d="M 180 580 L 180 620" marker-end="url(#arrow)"></path>
+      <path d="M 420 580 L 420 620" marker-end="url(#arrow)"></path>
+    </g>
+
+    <!-- edge labels -->
+    <g style="fill:var(--dimmed-text-color);font-size:16px;text-anchor:middle;">
+      <text x="315" y="448">Yes</text>
+      <text x="677" y="448">No</text>
+      <text x="935" y="448">Homepage</text>
+      <text x="1212" y="448">Login page</text>
+      <text x="194" y="602">Yes</text>
+      <text x="436" y="602">No</text>
+    </g>
+
+    <!-- boxes -->
+    <g style="stroke:var(--border-color);stroke-width:1.5;fill:none;rx:10;">
+      <!-- root -->
+      <rect x="590" y="30" width="340" height="50" rx="10"></rect>
+      <!-- behavior check -->
+      <rect x="290" y="140" width="380" height="56" rx="10"></rect>
+      <!-- result check -->
+      <rect x="850" y="140" width="380" height="56" rx="10"></rect>
+      <!-- left decision -->
+      <rect x="280" y="300" width="400" height="52" rx="10"></rect>
+      <!-- right decision -->
+      <rect x="850" y="300" width="380" height="52" rx="10"></rect>
+      <!-- yes child (located upvote button) -->
+      <rect x="140" y="470" width="320" height="76" rx="10"></rect>
+      <!-- no child (left) -->
+      <rect x="540" y="482" width="240" height="52" rx="10"></rect>
+      <!-- homepage -->
+      <rect x="750" y="470" width="340" height="76" rx="10"></rect>
+      <!-- login page -->
+      <rect x="1010" y="470" width="340" height="76" rx="10"></rect>
+      <!-- actually completed -->
+      <rect x="60" y="620" width="240" height="52" rx="10"></rect>
+      <!-- can't complete (level4) -->
+      <rect x="300" y="620" width="240" height="52" rx="10"></rect>
+    </g>
+
+    <!-- text -->
+    <g style="fill:var(--text-color);text-anchor:middle;">
+      <text x="760" y="62" style="font-size:18px;">Agent performs the upvote</text>
+
+      <text x="480" y="163" style="font-size:17px;">Behavior check</text>
+      <text x="480" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Did the Agent really click?)</text>
+
+      <text x="1040" y="163" style="font-size:17px;">Result check</text>
+      <text x="1040" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Page state after the click)</text>
+
+      <text x="480" y="330" style="font-size:17px;">Did the Agent call browser_click?</text>
+      <text x="1040" y="330" style="font-size:17px;">Where did the page stay?</text>
+
+      <text x="300" y="493" style="font-size:16px;">Located the correct</text>
+      <text x="300" y="515" style="font-size:16px;">upvote button?</text>
+      <text x="300" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(contains "up_")?</text>
+
+      <text x="660" y="505" style="font-size:16px;">Can't complete</text>
+      <text x="660" y="527" style="font-size:16px;">the click</text>
+
+      <text x="920" y="493" style="font-size:16px;">Logged in, upvote</text>
+      <text x="920" y="515" style="font-size:16px;">succeeded</text>
+      <text x="920" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(as expected)</text>
+
+      <text x="1180" y="493" style="font-size:16px;">Not logged in, can't</text>
+      <text x="1180" y="515" style="font-size:16px;">upvote</text>
+      <text x="1180" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(per HN logic)</text>
+
+      <text x="180" y="641" style="font-size:16px;">Actually completed</text>
+      <text x="180" y="663" style="font-size:16px;">the click</text>
+
+      <text x="420" y="641" style="font-size:16px;">Can't complete</text>
+      <text x="420" y="663" style="font-size:16px;">the click</text>
+    </g>
+  </svg>
+</div>
 
 Let's look at how to verify a successful upvote at the code level.
 
