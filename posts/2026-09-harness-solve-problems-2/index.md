@@ -32,7 +32,7 @@ Agent 当前的问题在于觉得自己成功了，也就是说他连自己有�
 > 注意，这里需要区分两个概念：
 >
 > - 模型的 Context Window —— 模型本身能处理多少 Token。例如 DeepSeek V4 Flash 的 Context Window 是 1M。
-> - Agent 的 Context Window —— 我们可以在 Harness 里面主动设置 Context window 的上限，比如 200K, 400K 单位是 Token。但在我们的代码里，这个上限以 Message 数量为单位（maxMessages(50)），而不是 Token。
+> - Agent 的 Context Window —— 我们可以在 Harness 里面主动设置 Context window 的上限，比如 200K, 400K 单位是 Token。但在我们的项目里，这个上限以 Message 数量为单位（maxMessages(50)），而不是 Token。
 
 ### 为什么需要搭建 Guardrail？
 
@@ -153,8 +153,6 @@ Agent 跟我们说它点赞成功了，我们怎么知道它说的是真的还�
 
 两层 Guardrail 管的不同的事：
 
-![image-20260729124301412](./media/image-20260729124301412.png)
-
 |     层级      |             管什么             |  超了怎么办  |
 | :-----------: | :----------------------------: | :----------: |
 | Agent Loop 层 | 一次尝试里面，Agent 别无限循环 | 停止这次尝试 |
@@ -272,7 +270,7 @@ runHarnessAttempt 函数就是我们最开始写在 Index.ts 里面的东西。
 
 ![image-20260729184403489](./media/image-20260729184403489.png)
 
-如果当前页面是登录界面的话，我们就继续往下做。我们输入账号和密码，这里的账号密码是不会进入 Agnt 的 Context 的，我们可以控制 Agent 能够看到什么，它的边界在哪里。（当然）
+如果当前页面是登录界面的话，我们就继续往下做。我们输入账号和密码，这里的账号密码是不会进入 Agnt 的 Context 的，我们可以控制 Agent 能够看到什么，它的边界在哪里。
 
 ![image-20260808231017946](./media/image-20260808231017946.png)
 

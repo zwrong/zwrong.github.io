@@ -213,6 +213,8 @@ article pre code {
     border-radius: 0.5rem;
     border: 0;
     padding: 1em;
+    display: block;
+    overflow-x: auto;
 }
 
 /* Override highlight.js: move bottom padding to pre so scrollbar is flush */
@@ -221,24 +223,24 @@ article pre code.hljs {
 }
 
 /* Scrollbar styling for code blocks — flush with border */
-article pre code.hljs::-webkit-scrollbar {
+article pre code::-webkit-scrollbar {
     height: 8px;
 }
-article pre code.hljs::-webkit-scrollbar-track {
+article pre code::-webkit-scrollbar-track {
     background: transparent;
     border-radius: 0 0 0.5rem 0.5rem;
 }
-article pre code.hljs::-webkit-scrollbar-thumb {
+article pre code::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.12);
     border-radius: 4px;
 }
-article pre code.hljs::-webkit-scrollbar-thumb:hover {
+article pre code::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.2);
 }
-[data-theme="dark"] article pre code.hljs::-webkit-scrollbar-thumb {
+[data-theme="dark"] article pre code::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
 }
-[data-theme="dark"] article pre code.hljs::-webkit-scrollbar-thumb:hover {
+[data-theme="dark"] article pre code::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
 }
 
