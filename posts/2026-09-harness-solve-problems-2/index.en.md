@@ -135,8 +135,6 @@ The Guardrails we built before were at the Agent Loop layer.
 
 Now, above the Agent Loop layer, at the Harness layer, we build another Guardrail called maxAttempts — the maximum number of attempts, meaning how many times the Agent can try the whole task. The relationship between the Agent Loop and the Harness is like this:
 
-![image-20260729121528253](./media/image-20260729121528253.png)
-
 ```
 	Harness Layer
       │
