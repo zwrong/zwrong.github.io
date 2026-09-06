@@ -4,7 +4,6 @@ date: 2026 年 9 月 6 日
 footerLine: "Vinen's Blog — 关于 Agent、Harness 和 AI 工程 · 写于 2026 年 9 月 6 日"
 ---
 
-# 如何用Harness解决问题（二）
 
 这篇博客我们会专注于如何一点一点搭建 Harness 解决问题。
 
