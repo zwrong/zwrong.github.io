@@ -425,6 +425,4 @@ trim — rest 只保留尾部 maxMessages - 2 = 4 条，其余丢弃 这个去�
 
 ![image-20260614215908597](./media/image-20260614215908597.png)
 
-看到这个结果，我当下真的想跟 deepseek-v4-flash 说：”谢谢你做的真好“。
-
 受限于 Claude 和 GPT 在使用上的不方便，我开始使用 deepseek-v4-pro. 使用了一段时间后，我在思考自己真的需要 v4-pro 吗？我又切换到 v4-flash. 在 Pi Agent 上使用 deepseek-v4-flash 第一次让我感受到了速度的优势，再加上价格比 v4-pro 又再便宜一些，让我一下子回到了拼尽全力用 Token 的日子。
