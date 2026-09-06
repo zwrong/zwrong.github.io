@@ -90,6 +90,17 @@ function collectPostImageRefs(postDir, entryFile = 'index.md', visited = new Set
     }
   }
 
+  // 也扫描英文版 index.en.md，验证其引用的图片并避免误报"未引用"
+  if (entryFile === 'index.md') {
+    const enPath = path.join(postDir, 'index.en.md');
+    if (fs.existsSync(enPath)) {
+      const enRefs = collectPostImageRefs(postDir, 'index.en.md', visited);
+      for (const ref of enRefs) {
+        refs.add(ref);
+      }
+    }
+  }
+
   return [...refs];
 }
 

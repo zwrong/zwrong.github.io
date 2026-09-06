@@ -337,7 +337,7 @@ The most important part is the logic of the findUpvoteCompletedViaLogin() functi
 
 Here, let's answer a question: what counts as a successful upvote?
 
-![image-20260905144533236](./media/image-20260905144533236.png)
+![iShot_2026-09-06_23.30.28](./media/iShot_2026-09-06_23.30.28.png)
 
 DeepSeek-V4-Flash-Vision-Exp drew a diagram here that I thought was pretty good. First, we look in the Trace for a "browser_click" tool.
 
