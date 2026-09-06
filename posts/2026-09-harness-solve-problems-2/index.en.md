@@ -167,13 +167,8 @@ The runHarnessAttempt function is what we originally wrote in index.ts.
 
 We can start by looking at the overall logic.
 
-![image-20260729153739010](./media/image-20260729153739010.png)
-
-- If the Agent upvoted, then the Agent must have called the browser_click tool — it has to actually click the upvote button, just like a person would. Second, the Agent must know which upvote button it's going to click, because only then can the "click" action hold.
-- If the Agent upvoted, then the page should stay on the homepage and shouldn't change. Because from the Agent's earlier operations, we can see that if you go upvote on Hacker News without logging in, the page redirects to the login page.
-
-<div style="position: relative; width: 100%; aspect-ratio: 1400 / 700; margin-bottom: 1.5rem;">
-  <svg viewBox="0 0 1400 700" role="img" aria-label="Upvote verification flow" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;font-family:var(--font-sans);" xmlns="http://www.w3.org/2000/svg">
+<div style="position: relative; width: 100%; aspect-ratio: 1600 / 700; margin-bottom: 1.5rem;">
+  <svg viewBox="0 0 1600 700" role="img" aria-label="Upvote verification flow" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;width:100%;height:100%;font-family:var(--font-sans);" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" style="fill:var(--border-color);"></path>
@@ -183,99 +178,99 @@ We can start by looking at the overall logic.
     <!-- connectors -->
     <g style="stroke:var(--border-color);stroke-width:1.5;fill:none;">
       <!-- root -> level1 -->
-      <path d="M 760 80 L 760 110"></path>
-      <path d="M 480 110 L 1040 110"></path>
-      <path d="M 480 110 L 480 140" marker-end="url(#arrow)"></path>
-      <path d="M 1040 110 L 1040 140" marker-end="url(#arrow)"></path>
+      <path d="M 800 80 L 800 115"></path>
+      <path d="M 430 115 L 1200 115"></path>
+      <path d="M 430 115 L 430 140" marker-end="url(#arrow)"></path>
+      <path d="M 1200 115 L 1200 140" marker-end="url(#arrow)"></path>
       <!-- level1 -> level2 -->
-      <path d="M 480 196 L 480 298" marker-end="url(#arrow)"></path>
-      <path d="M 1040 196 L 1040 298" marker-end="url(#arrow)"></path>
+      <path d="M 430 196 L 430 298" marker-end="url(#arrow)"></path>
+      <path d="M 1200 196 L 1200 298" marker-end="url(#arrow)"></path>
       <!-- level2 left -> children -->
-      <path d="M 480 352 L 480 420"></path>
-      <path d="M 300 420 L 660 420"></path>
-      <path d="M 300 420 L 300 470" marker-end="url(#arrow)"></path>
-      <path d="M 660 420 L 660 470" marker-end="url(#arrow)"></path>
+      <path d="M 430 352 L 430 405"></path>
+      <path d="M 250 405 L 640 405"></path>
+      <path d="M 250 405 L 250 440" marker-end="url(#arrow)"></path>
+      <path d="M 640 405 L 640 440" marker-end="url(#arrow)"></path>
       <!-- level2 right -> children -->
-      <path d="M 1040 352 L 1040 420"></path>
-      <path d="M 920 420 L 1180 420"></path>
-      <path d="M 920 420 L 920 470" marker-end="url(#arrow)"></path>
-      <path d="M 1180 420 L 1180 470" marker-end="url(#arrow)"></path>
+      <path d="M 1200 352 L 1200 405"></path>
+      <path d="M 1030 405 L 1370 405"></path>
+      <path d="M 1030 405 L 1030 440" marker-end="url(#arrow)"></path>
+      <path d="M 1370 405 L 1370 440" marker-end="url(#arrow)"></path>
       <!-- level3 left decision -> children -->
-      <path d="M 300 546 L 300 580"></path>
-      <path d="M 180 580 L 420 580"></path>
-      <path d="M 180 580 L 180 620" marker-end="url(#arrow)"></path>
-      <path d="M 420 580 L 420 620" marker-end="url(#arrow)"></path>
+      <path d="M 250 540 L 250 580"></path>
+      <path d="M 150 580 L 370 580"></path>
+      <path d="M 150 580 L 150 620" marker-end="url(#arrow)"></path>
+      <path d="M 370 580 L 370 620" marker-end="url(#arrow)"></path>
     </g>
 
     <!-- edge labels -->
     <g style="fill:var(--dimmed-text-color);font-size:16px;text-anchor:middle;">
-      <text x="315" y="448">Yes</text>
-      <text x="677" y="448">No</text>
-      <text x="935" y="448">Homepage</text>
-      <text x="1212" y="448">Login page</text>
-      <text x="194" y="602">Yes</text>
-      <text x="436" y="602">No</text>
+      <text x="265" y="430">Yes</text>
+      <text x="665" y="430">No</text>
+      <text x="1045" y="430">Homepage</text>
+      <text x="1400" y="430">Login page</text>
+      <text x="162" y="604">Yes</text>
+      <text x="396" y="604">No</text>
     </g>
 
     <!-- boxes -->
     <g style="stroke:var(--border-color);stroke-width:1.5;fill:none;rx:10;">
       <!-- root -->
-      <rect x="590" y="30" width="340" height="50" rx="10"></rect>
+      <rect x="630" y="30" width="340" height="50" rx="10"></rect>
       <!-- behavior check -->
-      <rect x="290" y="140" width="380" height="56" rx="10"></rect>
+      <rect x="240" y="140" width="380" height="56" rx="10"></rect>
       <!-- result check -->
-      <rect x="850" y="140" width="380" height="56" rx="10"></rect>
+      <rect x="1010" y="140" width="380" height="56" rx="10"></rect>
       <!-- left decision -->
-      <rect x="280" y="300" width="400" height="52" rx="10"></rect>
+      <rect x="230" y="300" width="400" height="52" rx="10"></rect>
       <!-- right decision -->
-      <rect x="850" y="300" width="380" height="52" rx="10"></rect>
+      <rect x="1010" y="300" width="380" height="52" rx="10"></rect>
       <!-- yes child (located upvote button) -->
-      <rect x="140" y="470" width="320" height="76" rx="10"></rect>
+      <rect x="90" y="440" width="320" height="100" rx="10"></rect>
       <!-- no child (left) -->
-      <rect x="540" y="482" width="240" height="52" rx="10"></rect>
+      <rect x="520" y="440" width="240" height="52" rx="10"></rect>
       <!-- homepage -->
-      <rect x="750" y="470" width="340" height="76" rx="10"></rect>
+      <rect x="860" y="440" width="340" height="76" rx="10"></rect>
       <!-- login page -->
-      <rect x="1010" y="470" width="340" height="76" rx="10"></rect>
+      <rect x="1200" y="440" width="340" height="76" rx="10"></rect>
       <!-- actually completed -->
-      <rect x="60" y="620" width="240" height="52" rx="10"></rect>
+      <rect x="30" y="620" width="240" height="52" rx="10"></rect>
       <!-- can't complete (level4) -->
-      <rect x="300" y="620" width="240" height="52" rx="10"></rect>
+      <rect x="250" y="620" width="240" height="52" rx="10"></rect>
     </g>
 
     <!-- text -->
     <g style="fill:var(--text-color);text-anchor:middle;">
-      <text x="760" y="62" style="font-size:18px;">Agent performs the upvote</text>
+      <text x="800" y="62" style="font-size:18px;">Agent performs the upvote</text>
 
-      <text x="480" y="163" style="font-size:17px;">Behavior check</text>
-      <text x="480" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Did the Agent really click?)</text>
+      <text x="430" y="163" style="font-size:17px;">Behavior check</text>
+      <text x="430" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Did the Agent really click?)</text>
 
-      <text x="1040" y="163" style="font-size:17px;">Result check</text>
-      <text x="1040" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Page state after the click)</text>
+      <text x="1200" y="163" style="font-size:17px;">Result check</text>
+      <text x="1200" y="185" style="font-size:14px;fill:var(--dimmed-text-color);">(Page state after the click)</text>
 
-      <text x="480" y="330" style="font-size:17px;">Did the Agent call browser_click?</text>
-      <text x="1040" y="330" style="font-size:17px;">Where did the page stay?</text>
+      <text x="430" y="330" style="font-size:17px;">Did the Agent call browser_click?</text>
+      <text x="1200" y="330" style="font-size:17px;">Where did the page stay?</text>
 
-      <text x="300" y="493" style="font-size:16px;">Located the correct</text>
-      <text x="300" y="515" style="font-size:16px;">upvote button?</text>
-      <text x="300" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(contains "up_")?</text>
+      <text x="250" y="473" style="font-size:16px;">Located the correct</text>
+      <text x="250" y="495" style="font-size:16px;">upvote button?</text>
+      <text x="250" y="517" style="font-size:14px;fill:var(--dimmed-text-color);">(contains "up_")?</text>
 
-      <text x="660" y="505" style="font-size:16px;">Can't complete</text>
-      <text x="660" y="527" style="font-size:16px;">the click</text>
+      <text x="640" y="471" style="font-size:16px;">Can't complete</text>
+      <text x="640" y="493" style="font-size:16px;">the click</text>
 
-      <text x="920" y="493" style="font-size:16px;">Logged in, upvote</text>
-      <text x="920" y="515" style="font-size:16px;">succeeded</text>
-      <text x="920" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(as expected)</text>
+      <text x="1030" y="463" style="font-size:16px;">Logged in, upvote</text>
+      <text x="1030" y="485" style="font-size:16px;">succeeded</text>
+      <text x="1030" y="507" style="font-size:14px;fill:var(--dimmed-text-color);">(as expected)</text>
 
-      <text x="1180" y="493" style="font-size:16px;">Not logged in, can't</text>
-      <text x="1180" y="515" style="font-size:16px;">upvote</text>
-      <text x="1180" y="537" style="font-size:14px;fill:var(--dimmed-text-color);">(per HN logic)</text>
+      <text x="1370" y="463" style="font-size:16px;">Not logged in, can't</text>
+      <text x="1370" y="485" style="font-size:16px;">upvote</text>
+      <text x="1370" y="507" style="font-size:14px;fill:var(--dimmed-text-color);">(per HN logic)</text>
 
-      <text x="180" y="641" style="font-size:16px;">Actually completed</text>
-      <text x="180" y="663" style="font-size:16px;">the click</text>
+      <text x="150" y="641" style="font-size:16px;">Actually completed</text>
+      <text x="150" y="663" style="font-size:16px;">the click</text>
 
-      <text x="420" y="641" style="font-size:16px;">Can't complete</text>
-      <text x="420" y="663" style="font-size:16px;">the click</text>
+      <text x="370" y="641" style="font-size:16px;">Can't complete</text>
+      <text x="370" y="663" style="font-size:16px;">the click</text>
     </g>
   </svg>
 </div>
