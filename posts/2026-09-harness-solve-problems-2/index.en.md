@@ -17,7 +17,7 @@ The methodology for using a Harness to solve a problem is:
 
 Following on from the previous post, *How to Solve Problems with Harness? (Part 1)* — the Agent's current problem is that it thinks it has completed the task, when in fact it hasn't. In other words, it can't even confirm whether it has finished the task. So we'll start from the very basics and build a Harness that lets the Agent confirm whether it has actually completed the task.
 
-## Building Guardrails (the Boundary Fence)
+## Building Guardrails
 
 What do our Guardrails look like? Why do we need to build Guardrails first? Do they help with hallucinations? Tejas talked first about how he built his own Guardrail. But why? I'd like to try to give an answer.
 
