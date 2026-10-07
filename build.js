@@ -481,6 +481,31 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2026-10-4",
+    recommendedAt: "2026-10-07T10:45:00+08:00",
+    title: "Pi Durable 是什么，有什么用？Pi 1.0 同日发布的 Agent Harness 框架",
+    url: "https://www.bilibili.com/video/BV1tTH66jEKZ",
+    kind: "Video",
+    site: "Bilibili",
+    description: "",
+    thumbnail: "/recommended-reading/media/pi-durable-harness.jpg",
+    notes: "最近在学习 Pi durable 的时候发现一个有趣的场景\n\n讲的是有一些工具被中断了 不能再执行第二次\n\n比如有个工具是专门发邮件的，Agent 已经发完了邮件但突然崩溃了，这时候如果重新恢复 Agent，用户说个继续，Agent 又把这个工具执行了一遍，就会发两封邮件\n\n感觉确实有可能会存在这个问题，不是所有工具都能重复执行\n\n比如支付工具，就不能重复调用，因为有可能已经支付过了\n\n跟同学讨论的时候联想到 Agent 安全评测 这块。同学说：“什么样的操作要请求许可，什么样的请求可以直接做。”如果 Agent 调用的工具，是不能执行第二遍的，那就要很小心",
+    notesEn: "Recently, while learning about Pi Durable, I came across an interesting scenario.\n\nIt's about tools that get interrupted and can't be executed a second time.\n\nFor example, there's a tool dedicated to sending emails. The Agent already sent the email but then suddenly crashed. If the Agent is restored and the user says \"continue\", the Agent executes that tool again — and two emails get sent.\n\nI do think this problem can really happen. Not every tool can be executed repeatedly.\n\nTake a payment tool: it can't be called twice, because the payment may already have gone through.\n\nWhen discussing with a classmate, we linked it to Agent safety evaluation. My classmate said: \"Which operations should request permission, and which requests can be done directly?\" If a tool the Agent calls cannot be executed a second time, you have to be very careful.",
+  },
+  {
+    date: "2026-10-6",
+    recommendedAt: "2026-10-07T10:44:00+08:00",
+    title: "Tw93：把 ASD-STE100 简化技术英语规则加进 AI 的回复里",
+    titleEn: "Tw93: Adding ASD-STE100 Simplified Technical English Rules to AI Replies",
+    url: "https://x.com/HiTw93/status/2107453346516718039",
+    kind: "Reading",
+    site: "x.com",
+    description: "",
+    thumbnail: "/recommended-reading/media/tw93-asd-ste100.png",
+    notes: "再比如“只有检查通过，才允许重启” 和“检查通过后就重启”，前一句就符合这个要求，后一句没有执行要求的动作容易多出很多可能，“才允许”在这里就是那个保持原意的关键词。\n检查通过后就重启，确实像 AI 会说的话",
+    notesEn: "Another example: \"Only after the check passes are you allowed to restart\" versus \"Restart after the check passes\". The first sentence satisfies the requirement; the second one omits the required condition and easily opens up many more possibilities — \"are allowed to\" is the keyword that preserves the original meaning here.\n\"Restart after the check passes\" really does sound like something an AI would say.",
+  },
+  {
     date: "2026-8-3",
     recommendedAt: "2026-08-10T10:35:56+08:00",
     title: "Don't be a meat proxy",
