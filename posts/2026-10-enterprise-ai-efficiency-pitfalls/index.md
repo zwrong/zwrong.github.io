@@ -1,5 +1,5 @@
 ---
-title: "企业 AI 提效：我踩的坑"
+title: "企业 AI 提效踩坑"
 date: 2026 年 10 月 8 日
 footerLine: "Vinen's Blog — 关于 AI 提效、企业落地 · 写于 2026 年 10 月 8 日"
 lede: "我在给企业做 AI 提效的过程中踩到的坑，以及从里面学到的东西：从想教会老板用 AI，到先和老板对齐对 AI 的理解。"
@@ -13,7 +13,7 @@ lede: "我在给企业做 AI 提效的过程中踩到的坑，以及从里面学
 <iframe src="https://player.bilibili.com/player.html?bvid=BV16bHv6dEvE&autoplay=0&high_quality=1&danmaku=0" title="我在企业 AI 提效踩的坑" frameborder="0" scrolling="no" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
 </div>
 
-## 用 AI 给公司提效，先和老板对齐对 AI 的理解
+## 企业 AI 提效，先和老板对齐 AI 的理解
 
 当我们给企业做 AI 提效的时候，得先确保一件事：我们和老板对 AI 的认知、对 AI 的理解是一致的。当然，要达到一致本身就挺难的。所以更重要的是，我们自己得有这个意识 —— 我们跟老板说的「AI」，可能不是一个东西。带着这个意识去跟老板沟通、跟员工沟通，多带点耐心，多做点兜底。
 
