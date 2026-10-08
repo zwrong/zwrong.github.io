@@ -17,4 +17,6 @@ lede: "我在给企业做 AI 提效的过程中踩到的坑，以及从里面学
 
 当我们给企业做 AI 提效的时候，得先确保一件事：我们和老板对 AI 的认知、对 AI 的理解是一致的。当然，要达到一致本身就挺难的。所以更重要的是，我们自己得有这个意识 —— 我们跟老板说的「AI」，可能不是一个东西。带着这个意识去跟老板沟通、跟员工沟通，多带点耐心，多做点兜底。
 
-<!-- TODO: 《The Lesson》中文版 B 站视频待补 —— 用户发布后替换本行为 Bilibili iframe -->
+<div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
+<iframe src="https://player.bilibili.com/player.html?bvid=BV1SFHQ6SEgS&autoplay=0&high_quality=1&danmaku=0" title="企业 AI 提效，先和老板对齐 AI 的理解" frameborder="0" scrolling="no" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
+</div>
