@@ -20,3 +20,11 @@ When we're doing AI efficiency work at a company, the first thing to get right i
 <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
 <iframe src="https://www.youtube.com/embed/f3-alx3LaXA" title="Align With Your Boss on What AI Is" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
 </div>
+
+## Food Wholesale Al Efficiency
+
+Learn the business models of traditional industries and think about how to apply AI in practice.
+
+<div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
+<iframe src="https://www.youtube.com/embed/bv2PxUH5ftk" title="Food Wholesale Al Efficiency" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
+</div>
