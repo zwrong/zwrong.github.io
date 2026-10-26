@@ -23,7 +23,7 @@ lede: "我在给企业做 AI 提效的过程中踩到的坑，以及从里面学
 
 ## 食品批发公司 AI 提效
 
-先看懂传统行业的商业模式。再想一想，AI 该怎么落到实践里。
+学习传统行业的商业模式，思考 AI 如何落地
 
 <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
 <iframe src="https://player.bilibili.com/player.html?bvid=BV1gNnS61EdE&autoplay=0&high_quality=1&danmaku=0" title="食品批发公司 AI 提效" frameborder="0" scrolling="no" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
