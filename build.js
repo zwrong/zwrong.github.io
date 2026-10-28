@@ -229,7 +229,7 @@ function renderPost(postDir, lang) {
   template = template.replaceAll('{{homeHref}}', langConf.homeHref);
   template = template.replaceAll('{{backHomeText}}', langConf.backHomeText);
   template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, zhUrl, enUrl));
-  template = template.replaceAll('{{canonicalUrl}}', `https://vinen.dev/${langConf.pathPrefix}${slug}/`);
+  template = template.replaceAll('{{canonicalUrl}}', `https://zwrong.github.io/${langConf.pathPrefix}${slug}/`);
 
   // Write output
   const outDir = path.join(DIST_DIR, langConf.pathPrefix, slug);
@@ -439,7 +439,7 @@ function buildRecommendedPage(recommended, lang) {
   template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, '/recommended-reading/', '/en/recommended-reading/'));
   template = template.replaceAll('{{homeHref}}', langConf.homeHref);
   template = template.replaceAll('{{backHomeText}}', langConf.backHomeText);
-  template = template.replaceAll('{{canonicalUrl}}', `https://vinen.dev/${langConf.pathPrefix}recommended-reading/`);
+  template = template.replaceAll('{{canonicalUrl}}', `https://zwrong.github.io/${langConf.pathPrefix}recommended-reading/`);
 
   const outDir = path.join(DIST_DIR, langConf.pathPrefix, 'recommended-reading');
   fs.mkdirSync(outDir, { recursive: true });
