@@ -191,7 +191,7 @@ function renderPost(postDir, lang) {
   }
 
   let tocHtml = '';
-  if (tocItems.length > 0) {
+  if (tocItems.length > 0 && fm.toc !== false) {
     tocHtml = `
       <h1 class="toc-header">${langConf.tocHeader}</h1>
       <div class="toc">
