@@ -77,6 +77,13 @@ function truncate(text, maxUnits) {
     units += u;
   }
   let out = chars.slice(0, cut).join('');
+
+  // Prefer ending on a full sentence, so the card does not stop mid-thought.
+  const sentence = out.match(/^.*[。！？!?]|^.*\.(?=\s)/s);
+  if (sentence && sentence[0].length > out.length * 0.55) {
+    return sentence[0].trimEnd();
+  }
+
   const lastSpace = out.lastIndexOf(' ');
   if (lastSpace > out.length * 0.6) out = out.slice(0, lastSpace);
   return `${out.trimEnd()}…`;
@@ -250,7 +257,7 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
     const parsed = matter(fs.readFileSync(mdPath, 'utf-8'));
     const fm = parsed.data;
     const title = fm.title || slug;
-    const lede = fm.lede || firstParagraph(parsed.content);
+    const lede = fm.ogDescription || fm.lede || firstParagraph(parsed.content);
     const outFile = path.join(OUT_DIR, sub, `${slug}.png`);
     shoot(renderCard({ title, lede, rawTitle: fm.ogTitle }), outFile);
     count++;

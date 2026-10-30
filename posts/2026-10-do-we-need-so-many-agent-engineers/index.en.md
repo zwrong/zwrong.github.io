@@ -1,5 +1,6 @@
 ---
 title: "Maybe We Don't Need This Many Agent Engineers"
+ogDescription: "One offer letter from a dozen or two resumes. Does the market really need this many Agent Engineers?"
 date: 2026 年 10 月 28 日
 footerLine: "Vinen's Blog — About Agent, Career Choices · Written October 28, 2026"
 lede: "I sent out a dozen or two resumes this autumn recruiting season and got one offer letter. That made me ask again: does the market really need this many Agent Engineers?"
