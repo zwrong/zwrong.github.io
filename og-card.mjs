@@ -92,10 +92,23 @@ function fitTitleSize(title, maxWidth, maxLines) {
   return sizes[sizes.length - 1];
 }
 
-function renderCard({ title, lede }) {
+// Split an explicit title, already escaped, into lines.
+// `ogTitle` in frontmatter can force breaks with `|`.
+function titleHtml(title, rawTitle) {
+  if (!rawTitle) return escapeHtml(title);
+  return rawTitle
+    .split('|')
+    .map((part) => escapeHtml(part.trim()))
+    .join('<br>');
+}
+
+function renderCard({ title, lede, rawTitle }) {
   const padX = 84;
   const usable = WIDTH - padX * 2;
-  const titleSize = fitTitleSize(title, usable, 3);
+  const longestLine = rawTitle
+    ? rawTitle.split('|').reduce((a, b) => (displayUnits(a) >= displayUnits(b) ? a : b), '')
+    : title;
+  const titleSize = fitTitleSize(longestLine, usable, rawTitle ? 1 : 3);
   // Two lines of summary, cut at a word boundary so latin text is not chopped.
   const ledeText = lede ? truncate(lede, (usable / 30) * 2) : '';
   const hasAvatar = fs.existsSync(AVATAR_FILE);
@@ -171,7 +184,7 @@ function renderCard({ title, lede }) {
   }
 </style>
 <div class="body">
-  <h1>${escapeHtml(title)}</h1>
+  <h1>${titleHtml(title, rawTitle)}</h1>
   ${ledeText ? `<p class="lede">${escapeHtml(ledeText)}</p>` : ''}
 </div>
 <div class="who">
@@ -239,7 +252,7 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
     const title = fm.title || slug;
     const lede = fm.lede || firstParagraph(parsed.content);
     const outFile = path.join(OUT_DIR, sub, `${slug}.png`);
-    shoot(renderCard({ title, lede }), outFile);
+    shoot(renderCard({ title, lede, rawTitle: fm.ogTitle }), outFile);
     count++;
     console.log(`  card: ${path.relative(__dirname, outFile)}`);
   }

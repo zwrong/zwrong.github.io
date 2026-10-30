@@ -1,5 +1,6 @@
 ---
 title: "也许我们不需要这么多 Agent 开发"
+ogTitle: "也许我们不需要|这么多 Agent 开发"
 date: 2026 年 10 月 28 日
 footerLine: "Vinen's Blog — 关于 Agent、职业选择 · 写于 2026 年 10 月 28 日"
 lede: "秋招投了十几二十份简历，只收到一份意向书。这让我重新想一个问题：市场真的需要这么多 Agent 开发吗？"
