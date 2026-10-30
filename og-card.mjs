@@ -48,6 +48,23 @@ function displayUnits(text) {
   return units;
 }
 
+// First body paragraph, used as summary when the post has no lede.
+function firstParagraph(markdown) {
+  const blocks = markdown.split(/\n\s*\n/);
+  for (const block of blocks) {
+    const text = block.trim();
+    if (!text) continue;
+    if (/^(#{1,6}\s|[-*+]\s|\d+\.\s|>|\||<|```)/.test(text)) continue;
+    return text
+      .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/[*_`]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+  return '';
+}
+
 // Cut text to a display budget, at a word boundary when possible, with an ellipsis.
 function truncate(text, maxUnits) {
   if (displayUnits(text) <= maxUnits) return text;
@@ -171,26 +188,37 @@ function shoot(html, outFile) {
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
 
   // A fresh profile per shot keeps Chrome from waiting on another instance.
-  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'og-profile-'));
+  // Chrome occasionally hangs on start, so retry a few times.
+  const attempts = 3;
   try {
-    execFileSync(CHROME, [
-      '--headless=new',
-      '--disable-gpu',
-      '--hide-scrollbars',
-      '--no-first-run',
-      '--no-default-browser-check',
-      '--disable-extensions',
-      '--disable-background-networking',
-      '--disable-sync',
-      `--user-data-dir=${profile}`,
-      '--force-device-scale-factor=1',
-      `--window-size=${WIDTH},${HEIGHT}`,
-      `--screenshot=${outFile}`,
-      `file://${tmpHtml}`,
-    ], { stdio: 'ignore', timeout: 30000 });
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+      const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'og-profile-'));
+      try {
+        execFileSync(CHROME, [
+          '--headless=new',
+          '--disable-gpu',
+          '--hide-scrollbars',
+          '--no-first-run',
+          '--no-default-browser-check',
+          '--disable-extensions',
+          '--disable-background-networking',
+          '--disable-sync',
+          `--user-data-dir=${profile}`,
+          '--force-device-scale-factor=1',
+          `--window-size=${WIDTH},${HEIGHT}`,
+          `--screenshot=${outFile}`,
+          `file://${tmpHtml}`,
+        ], { stdio: 'ignore', timeout: 45000 });
+        return;
+      } catch (err) {
+        if (attempt === attempts) throw err;
+        console.warn(`  retry ${attempt}: ${path.basename(outFile)}`);
+      } finally {
+        fs.rmSync(profile, { recursive: true, force: true });
+      }
+    }
   } finally {
     fs.rmSync(tmpHtml, { force: true });
-    fs.rmSync(profile, { recursive: true, force: true });
   }
 }
 
@@ -206,9 +234,10 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
   for (const [file, sub] of [['index.md', ''], ['index.en.md', 'en']]) {
     const mdPath = path.join(dir, file);
     if (!fs.existsSync(mdPath)) continue;
-    const fm = matter(fs.readFileSync(mdPath, 'utf-8')).data;
+    const parsed = matter(fs.readFileSync(mdPath, 'utf-8'));
+    const fm = parsed.data;
     const title = fm.title || slug;
-    const lede = fm.lede || '';
+    const lede = fm.lede || firstParagraph(parsed.content);
     const outFile = path.join(OUT_DIR, sub, `${slug}.png`);
     shoot(renderCard({ title, lede }), outFile);
     count++;
