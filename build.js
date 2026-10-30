@@ -230,6 +230,7 @@ function renderPost(postDir, lang) {
   template = template.replaceAll('{{backHomeText}}', langConf.backHomeText);
   template = template.replaceAll('{{langToggle}}', langToggleHtml(lang, zhUrl, enUrl));
   template = template.replaceAll('{{canonicalUrl}}', `https://zwrong.github.io/${langConf.pathPrefix}${slug}/`);
+  template = template.replaceAll('{{ogImage}}', ogImageUrl(slug, langConf.pathPrefix));
 
   // Write output
   const outDir = path.join(DIST_DIR, langConf.pathPrefix, slug);
@@ -283,6 +284,16 @@ function splitHtmlAndMd(content) {
     segments.push({ type: current.type, content: current.lines.join('\n') });
   }
   return segments;
+}
+
+// Social preview card for a post. Falls back to the site-wide image when no
+// card has been generated yet (see og-card.mjs).
+function ogImageUrl(slug, pathPrefix) {
+  const rel = path.join(pathPrefix, `${slug}.png`);
+  if (fs.existsSync(path.join(__dirname, 'og-media', rel))) {
+    return `https://zwrong.github.io/og-media/${pathPrefix}${slug}.png`;
+  }
+  return 'https://zwrong.github.io/og-image.png';
 }
 
 function copyAssets(srcDir, destDir) {
@@ -717,6 +728,14 @@ const recommendedMediaDest = path.join(DIST_DIR, 'recommended-reading', 'media')
 if (fs.existsSync(recommendedMediaSrc)) {
   fs.cpSync(recommendedMediaSrc, recommendedMediaDest, { recursive: true });
   console.log('  copied: dist/recommended-reading/media/');
+}
+
+// Copy generated social preview cards
+const ogMediaSrc = path.join(__dirname, 'og-media');
+const ogMediaDest = path.join(DIST_DIR, 'og-media');
+if (fs.existsSync(ogMediaSrc)) {
+  fs.cpSync(ogMediaSrc, ogMediaDest, { recursive: true });
+  console.log('  copied: dist/og-media/');
 }
 
 // Copy static files
