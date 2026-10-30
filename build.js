@@ -293,7 +293,7 @@ function ogImageUrl(slug, pathPrefix) {
   if (fs.existsSync(path.join(__dirname, 'og-media', rel))) {
     return `https://zwrong.github.io/og-media/${pathPrefix}${slug}.png`;
   }
-  return 'https://zwrong.github.io/og-image.png';
+  return 'https://zwrong.github.io/og-media/og-site.png';
 }
 
 function copyAssets(srcDir, destDir) {
@@ -739,7 +739,7 @@ if (fs.existsSync(ogMediaSrc)) {
 }
 
 // Copy static files
-for (const file of ['style.css', 'components.js', 'favicon.svg', 'og-image.png']) {
+for (const file of ['style.css', 'components.js', 'favicon.svg']) {
   const src = path.join(__dirname, file);
   if (fs.existsSync(src)) {
     fs.cpSync(src, path.join(DIST_DIR, file));

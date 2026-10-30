@@ -245,4 +245,12 @@ for (const entry of fs.readdirSync(POSTS_DIR, { withFileTypes: true })) {
   }
 }
 
+// Site-wide card for the homepage and the recommended-reading page.
+if (!only) {
+  const siteCard = path.join(OUT_DIR, 'og-site.png');
+  shoot(renderCard({ title: AUTHOR_NAME, lede: 'Agent · Harness — 关于 Agent、Harness 和 AI 工程' }), siteCard);
+  count++;
+  console.log('  card: og-media/og-site.png');
+}
+
 console.log(`Done. ${count} card(s).`);
