@@ -739,7 +739,7 @@ if (fs.existsSync(ogMediaSrc)) {
 }
 
 // Copy static files
-for (const file of ['style.css', 'components.js', 'favicon.svg']) {
+for (const file of ['style.css', 'components.js', 'favicon.svg', 'og-image.png']) {
   const src = path.join(__dirname, file);
   if (fs.existsSync(src)) {
     fs.cpSync(src, path.join(DIST_DIR, file));
