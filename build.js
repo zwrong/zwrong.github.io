@@ -492,6 +492,31 @@ for (const dir of postDirs) {
 //       Always fetch the actual publish date from the source URL.
 const recommended = [
   {
+    date: "2025-6-12",
+    recommendedAt: "2026-11-03T18:55:00+08:00",
+    title: "Don’t Build Multi-Agents",
+    url: "https://cognition.com/blog/dont-build-multi-agents",
+    kind: "Reading",
+    site: "cognition.com",
+    description: "",
+    thumbnail: "/recommended-reading/media/cognition-dont-build-multi-agents.png",
+    notes: "确实任何一个动作，包括工具调用，结果，都可能影响 Agent 的结果",
+    notesEn: "Indeed, any action — including a tool call and its result — can affect the Agent's outcome.",
+  },
+  {
+    date: "2026-10-30",
+    recommendedAt: "2026-11-03T18:54:00+08:00",
+    title: "DeepSeek 一张卡为什么能收入 38 美元",
+    titleEn: "Why a Single DeepSeek Card Can Earn 38 Dollars",
+    url: "https://www.bilibili.com/video/BV13cxv6SE9L",
+    kind: "Video",
+    site: "Bilibili",
+    description: "",
+    thumbnail: "/recommended-reading/media/bilibili-deepseek-38-dollars.jpg",
+    notes: "可能从前年去年就一直听过 投机解码这个东西，今年年初又听罗福莉老师讲了 MTP，今天看这个视频 突然一下子理解了 什么是 投机解码 为什么需要。\n\n黑猩猩老师能够坚持做长视频，让人感动。",
+    notesEn: "I may have heard about speculative decoding since the year before last, and earlier this year I heard Luo Fuli talk about MTP. Today this video suddenly made me understand what speculative decoding is and why it is needed.\n\nIt is touching that Teacher Chimpanzee keeps making long videos.",
+  },
+  {
     date: "2026-10-4",
     recommendedAt: "2026-10-07T10:45:00+08:00",
     title: "Pi Durable 是什么，有什么用？Pi 1.0 同日发布的 Agent Harness 框架",
