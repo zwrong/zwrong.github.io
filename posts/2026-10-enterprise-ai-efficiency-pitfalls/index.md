@@ -28,3 +28,11 @@ lede: "我在给企业做 AI 提效的过程中踩到的坑，以及从里面学
 <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
 <iframe src="https://player.bilibili.com/player.html?bvid=BV1gNnS61EdE&autoplay=0&high_quality=1&danmaku=0" title="食品批发公司 AI 提效" frameborder="0" scrolling="no" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
 </div>
+
+## 食品批发公司的痛点
+
+食品批发公司的痛点是销售单需要人工审核。这个痛点暂时还不适合使用 AI 提效。
+
+<div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin-bottom: 1.5rem;">
+<iframe src="https://player.bilibili.com/player.html?bvid=BV1R6xz6BEWq&autoplay=0&high_quality=1&danmaku=0" title="食品批发公司的痛点" frameborder="0" scrolling="no" allowfullscreen style="position: absolute; inset: 0; width: 100%; height: 100%; border: 0;"></iframe>
+</div>
